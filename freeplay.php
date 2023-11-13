@@ -16,18 +16,18 @@
 			die("Connection failed: " . mysqli_connect_error());
 		}
 
-		if (!isset($_SESSION["tries"]) || !isset($_SESSION["table_index"]) || !isset($_SESSION["answer"])) {
+		if (!isset($_SESSION["tries"]) || !isset($_SESSION["table_index"]) || !isset($_SESSION["name"])) {
 			$_SESSION["tries"] = 5;
 			$_SESSION["table_index"] = 0;
-			$_SESSION["answer"] = "";
+			$_SESSION["name"] = "";
 		}
-		
+
 		// If form is submitted, process the guess
 		if (isset($_POST["submit"])) {
 			$guess = $_POST["guess"];
-			if ($guess === $_SESSION["answer"]) {
+			if ($guess === $_SESSION["name"]) {
 				$_SESSION["tries"] = 5;
-				$_SESSION["answer"] = "";
+				$_SESSION["name"] = "";
 				$_SESSION["table_index"]++;
 				// Reset table index to 0 if it exceeds the number of tables
 				if ($_SESSION["table_index"] >= 6) {
@@ -45,11 +45,14 @@
 			if (!isset($_SESSION["table_index"])) {
 				$_SESSION["table_index"] = 0;
 			}
-			if (!isset($_SESSION["answer"])) {
-				$_SESSION["answer"] = "";
+			if (!isset($_SESSION["name"])) {
+				$_SESSION["name"] = "";
 			}
 		}
-		
+
+		// Initialize $image_path here
+		$image_path = "";
+
 		// If there are no more tables or no more tries left, end the game
 		if ($_SESSION["table_index"] >= 6 || $_SESSION["tries"] <= 0) {
 			echo "Game over";
@@ -60,20 +63,18 @@
 			$tables = array("ability", "agent", "graffiti", "playercard", "weapon", "quote");
 			$table = $tables[$_SESSION["table_index"]];
 			if ($table === "quote") {
-				$query = "SELECT quote, answer FROM quote ORDER BY RAND() LIMIT 1";
+				$query = "SELECT quote, `name` FROM quote ORDER BY RAND() LIMIT 1";
 			} else {
-				$query = "SELECT answer, img FROM $table ORDER BY RAND() LIMIT 1";
+				$query = "SELECT `name`, img FROM $table ORDER BY RAND() LIMIT 1";
 			}
 			$result = mysqli_query($connection, $query);
 			if (mysqli_num_rows($result) > 0) {
 				$row = mysqli_fetch_assoc($result);
-				$_SESSION["answer"] = $row["answer"];
+				$_SESSION["name"] = $row["name"];
 				if ($table === "quote") {
 					$quote = $row["quote"];
-					$image_path = "";
 				} else {
 					$image_path = $row["img"];
-					$quote = "";
 				}
 			}
 
