@@ -10,7 +10,6 @@
 	<form>
 		<button formaction="daily.php">Daily</button>
 		<button formaction="freeplay.php">Freeplay</button>
-		<button formaction="genius.php">Today's Geniuses</button>
 	</form>
 </body>
 </html>
