@@ -3,6 +3,14 @@
 <head>
     <title>Valorant Guesser</title>
     <link rel="stylesheet" href="styles.css">
+
+    <script>
+    // Function to hide the placeholder option after page load
+    window.onload = function() {
+        const placeholderOption = document.querySelector('.placeholder-option');
+        placeholderOption.style.display = 'none';
+    }
+    </script>
 </head>
 <body>
     <?php
@@ -71,38 +79,34 @@
         echo "<a href='index.php'><button type='button'>Main Screen</button></a></form>";
         session_destroy();
     } else {
-        // Select a random image path or quote and answer from the current table
         $tables = array("ability", "agent", "graffiti", "playercard", "weapon", "quote");
         $table = $tables[$_SESSION["table_index"]];
-        if ($table === "quote" && empty($_SESSION["quote"])) {
-            $query = "SELECT quote, `name` FROM quote ORDER BY RAND() LIMIT 1";
-        } elseif (!empty($_SESSION["image_path"])) {
-            // For maintaining the current image
-            $quote = "";
-            $image_path = $_SESSION["image_path"];
+
+        if ($table === "quote") {
+        $query = "SELECT quote, `name` FROM quote ORDER BY RAND() LIMIT 1";
         } else {
-            $query = "SELECT `name`, img FROM $table ORDER BY RAND() LIMIT 1";
+        $query = "SELECT `name`, img FROM $table ORDER BY RAND() LIMIT 1";
         }
 
         if (isset($query)) {
-            $result = mysqli_query($connection, $query);
-            if (mysqli_num_rows($result) > 0) {
-                $row = mysqli_fetch_assoc($result);
-                $_SESSION["name"] = $row["name"];
-                if ($table === "quote") {
-                    $_SESSION["quote"] = $row["quote"];
-                } else {
-                    $_SESSION["image_path"] = $row["img"];
-                }
+        $result = mysqli_query($connection, $query);
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
+            $_SESSION["name"] = $row["name"];
+            if ($table === "quote") {
+            $_SESSION["quote"] = $row["quote"];
+            } else {
+            $_SESSION["image_path"] = $row["img"];
             }
+        }
         }
 
         // Output the image or quote and the guess form
         if ($table === "quote") {
             echo "<blockquote class='centered'>{$_SESSION['quote']}</blockquote><br>";
-        } else {
+          } else {
             echo "<img class='img-size' src='{$_SESSION['image_path']}'><br>";
-        }
+          }
 
             // Get the current answer from the session
             $current_answer = $_SESSION["name"];
@@ -119,16 +123,15 @@
                     $answers[] = $row["name"];
             }
             }
-
-            // Replace the form with a select element
             echo "<form method='post'>";
             echo "<label for='guess'>Guess:</label>";
             echo "<select name='guess' id='guess'>";
 
-            // Add each possible answer as an option to the select element
+            // Add an empty option with a placeholder class for styling
+            echo "<option value='' class='placeholder-option'>Select an answer</option>";
+
             foreach ($answers as $answer) {
-                $selected = ($answer == $current_answer) ? " selected" : "";
-                echo "<option value='$answer'$selected>$answer</option>";
+            echo "<option value='$answer'>$answer</option>";
             }
 
             echo "</select>";
