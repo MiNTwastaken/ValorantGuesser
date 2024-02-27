@@ -103,12 +103,38 @@
         } else {
             echo "<img class='img-size' src='{$_SESSION['image_path']}'><br>";
         }
-        echo "<form method='post'>";
-        echo "<label for='guess'>Guess:</label>";
-        echo "<input type='text' name='guess' id='guess'>";
-        echo "<input type='submit' name='submit' value='Submit'>";
-        echo "</form>";
-        echo "Tries left: {$_SESSION['tries']}";
+
+            // Get the current answer from the session
+            $current_answer = $_SESSION["name"];
+
+            // Get all possible answers from the current table based on the session variable
+            $tables = array("ability", "agent", "graffiti", "playercard", "weapon", "quote");
+            $table = $tables[$_SESSION["table_index"]];
+
+            $query = "SELECT `name` FROM $table";
+            $result = mysqli_query($connection, $query);
+            $answers = [];
+            if (mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $answers[] = $row["name"];
+            }
+            }
+
+            // Replace the form with a select element
+            echo "<form method='post'>";
+            echo "<label for='guess'>Guess:</label>";
+            echo "<select name='guess' id='guess'>";
+
+            // Add each possible answer as an option to the select element
+            foreach ($answers as $answer) {
+                $selected = ($answer == $current_answer) ? " selected" : "";
+                echo "<option value='$answer'$selected>$answer</option>";
+            }
+
+            echo "</select>";
+            echo "<input type='submit' name='submit' value='Submit'>";
+            echo "</form>";
+            echo "Tries left: {$_SESSION['tries']}";
     }
 
     // Close database connection
