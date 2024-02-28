@@ -9,8 +9,8 @@
 	<p>Choose an option:</p>
 	<form>
 		<button formaction="daily.php">Daily</button>
-		<button formaction="freeplay.php">Freeplay</button>
+		<button formaction="oneshot.php">One Shot</button>
+		<button formaction="freeplay.php">FreePlay</button>
 	</form>
 </body>
 </html>
-
