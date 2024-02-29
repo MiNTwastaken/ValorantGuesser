@@ -17,9 +17,11 @@ Lietotājs ikdienas un viena mēģinājuma mīklā varēs uzvarēt uzminot visu 
 
 Lietotājs varēs minēt katru jautājumu ikdienas mīklā 5 reizes, viena mēģinājuma mīklā 1 reizi un brīvspēlē bezgalīgi
 
+Lietotājs varēs atgriezties sākumlapā katrā spēlē
 
-Admins varēs ielogoties admin kontā
 
-Admins varēs dzēst un pievienot jaunus aģentus, ieročus, kartītes, citātus, spējas, grafitī
+Admins varēs ielogoties admin kontā un izmantot admin paneli
+
+Admins varēs dzēst, rediģēt un pievienot aģentus, ieročus, kartītes, citātus, spējas, grafitī
 
 Admins varēs ģenerēt jaunu ikdienas spēli
