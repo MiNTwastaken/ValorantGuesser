@@ -1,5 +1,5 @@
 <?php
-// Start session (if not already started)
+// Start session
 session_start();
 
 // Check if user is logged in as admin
@@ -9,9 +9,12 @@ if (!isset($_SESSION["username"]) || $_SESSION["username"] != "admin") {
 }
 
 // Get selected data type from form submission
-$dataType = $_POST["data_type"];
+$dataType = isset($_POST["data_type"]) ? $_POST["data_type"] : null;
+if (empty($dataType) && isset($_GET["data_type"])) {
+    $dataType = $_GET["data_type"];
+}
 
-// Connect to database (replace with your credentials)
+// Connect to database
 $connection = mysqli_connect("localhost:3306", "root", "", "valorantguesser");
 
 // Check connection
@@ -19,15 +22,15 @@ if (!$connection) {
   die("Connection failed: " . mysqli_connect_error());
 }
 
-// Function to display data based on type (replace with your actual queries)
+// Function to display data based on type
 function showData($dataType, $connection) {
-  $sql = "SELECT * FROM " . $dataType; // Replace with specific queries for each data type
+  $sql = "SELECT * FROM " . $dataType;
   $result = mysqli_query($connection, $sql);
 
   if (mysqli_num_rows($result) > 0) {
     echo "<table>";
     echo "<tr>";
-    // Add table headers based on data type
+    // Add table headers
     if ($dataType == "quote") {
       echo "<th>Quote</th>";
       echo "<th>Agent Name</th>";
