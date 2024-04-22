@@ -5,62 +5,70 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <?php
-  // Initialize variables
-  $usernameErr = "";
-  $passwordErr = "";
-  $registerSuccess = false; // Flag for successful registration
+<?php
+// Initialize variables
+$usernameErr = "";
+$passwordErr = "";
+$registerSuccess = false; // Flag for successful registration
 
-  // Process login form submission
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (empty($_POST["username"])) {
-      $usernameErr = "Username is required";
-    } else {
-      $username = htmlspecialchars($_POST["username"]);
-    }
-
-    if (empty($_POST["password"])) {
-      $passwordErr = "Password is required";
-    } else {
-      $password = htmlspecialchars($_POST["password"]);
-    }
-
-    // Validate credentials against database (for login)
-    if (!empty($username) && !empty($password)) {
-      // Set up database connection
-      $connection = mysqli_connect("localhost:3306", "root", "", "valorantguesser");
-
-      // Check connection
-      if (!$connection) {
-        die("Connection failed: " . mysqli_connect_error());
-      }
-
-      $sql = "SELECT * FROM user WHERE username = '$username'";
-      $result = mysqli_query($connection, $sql);
-
-      if (mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-        if (password_verify($password, $row['password'])) {
-          // Password is valid, login successful
-
-          $loginSuccess = true;
-          session_start();
-          $_SESSION["username"] = $username;
-          header("Location: index.php");
-          exit;
-
-        } else {
-          $passwordErr = "Invalid password";
-        }
-      } else {
-        $usernameErr = "Invalid username";
-      }
-
-      // Close the connection
-      mysqli_close($connection);
-    }
+// Process login form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (empty($_POST["username"])) {
+    $usernameErr = "Username is required";
+  } else {
+    $username = htmlspecialchars($_POST["username"]);
   }
-  ?>
+
+  if (empty($_POST["password"])) {
+    $passwordErr = "Password is required";
+  } else {
+    $password = htmlspecialchars($_POST["password"]);
+  }
+
+  // Validate credentials against database (for login)
+  if (!empty($username) && !empty($password)) {
+    // Set up database connection
+    $connection = mysqli_connect("localhost:3306", "root", "", "valorantguesser");
+
+    // Check connection
+    if (!$connection) {
+      die("Connection failed: " . mysqli_connect_error());
+    }
+
+    $sql = "SELECT * FROM user WHERE username = '$username'";
+    $result = mysqli_query($connection, $sql);
+
+    if (mysqli_num_rows($result) > 0) {
+      $row = mysqli_fetch_assoc($result);
+      if (password_verify($password, $row['password'])) {
+        // Password is valid, login successful
+
+        $loginSuccess = true;
+        session_start();
+        $_SESSION["username"] = $username;
+
+        if ($row["admin"] == 1) {
+          $_SESSION["admin"] = 1;
+          header("Location: admin.php"); // Redirect to admin panel if admin
+        } else {
+          $_SESSION["admin"] = 0;
+          header("Location: index.php"); // Redirect to non-admin page otherwise
+        }
+
+        exit;
+      } else {
+        $passwordErr = "Invalid password";
+      }
+    } else {
+      $usernameErr = "Invalid username";
+    }
+
+    // Close the connection
+    mysqli_close($connection);
+  }
+}
+?>
+
 
   <h2>Valorant Forum Login</h2>
   <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">

@@ -8,11 +8,10 @@
   <?php
   session_start();
 
-  // Check if user is logged in as admin
-  if (!isset($_SESSION["username"]) || $_SESSION["username"] != "admin") {
-    header("Location: login.php"); // Redirect to login if not admin
-    exit;
+  if (!isset($_SESSION["admin"]) || $_SESSION["admin"] !== 1) {
+    header("Location: login.php");
   }
+
   ?>
 
   <h1>Valorant Guesser Admin Panel</h1>
