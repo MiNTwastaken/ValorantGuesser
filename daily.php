@@ -1,114 +1,189 @@
-<?php
-session_start();
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Valorant Guesser</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <?php
+    // Set up database connection
+    $connection = mysqli_connect("localhost:3306", "root", "", "valorantguesser");
 
-// Generate a unique identifier for the user and store it in a cookie
-if (!isset($_COOKIE["user_identifier"])) {
-    $userIdentifier = uniqid("user_", true);
-    setcookie("user_identifier", $userIdentifier, time() + (86400 * 30), "/"); // Cookie lasts for 30 days
-}
-
-// Set up database connection
-$connection = mysqli_connect("localhost:3306", "root", "", "valorantguesser");
-
-// Check connection
-if (!$connection) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
-if (!isset($_SESSION["tries"]) || !isset($_SESSION["table_index"]) || !isset($_SESSION["name"]) || !isset($_SESSION["quote"]) || !isset($_SESSION["image_path"])) {
-    $_SESSION["tries"] = 5;
-    $_SESSION["table_index"] = 0;
-    $_SESSION["name"] = "";
-    $_SESSION["quote"] = "";
-    $_SESSION["image_path"] = "";
-}
-
-// If form is submitted, process the guess
-if (isset($_POST["submit"])) {
-    $guess = $_POST["guess"];
-    if ($guess === $_SESSION["name"]) {
-        $_SESSION["tries"] = 5;
-        $_SESSION["name"] = "";
-        $_SESSION["quote"] = "";
-        $_SESSION["image_path"] = "";
-        $_SESSION["table_index"]++;
-        // Reset table index to 0 if it exceeds the number of tables
-        if ($_SESSION["table_index"] >= 6) {
-            // Display "You've won"
-            echo "You've won!";
-            echo "<form method='post'><input type='submit' name='retry' value='Retry'>";
-            echo "<a href='index.php'><button type='button'>Main Screen</button></a></form>";
-            session_destroy();
-            exit; // Stop execution to prevent further output
-        }
-    } else {
-        $_SESSION["tries"]--;
+    // Check connection
+    if (!$connection) {
+        die("Connection failed: " . mysqli_connect_error());
     }
-} else {
-    // Only set initial game state if the form has not been submitted
-    if (!isset($_SESSION["tries"])) {
-        $_SESSION["tries"] = 5;
-    }
-    if (!isset($_SESSION["table_index"])) {
-        $_SESSION["table_index"] = 0;
-    }
-    if (!isset($_SESSION["name"])) {
-        $_SESSION["name"] = "";
-    }
-    if (!isset($_SESSION["quote"])) {
-        $_SESSION["quote"] = "";
-    }
-    if (!isset($_SESSION["image_path"])) {
-        $_SESSION["image_path"] = "";
-    }
-}
 
-// If there are no more tables or no more tries left, end the game
-if ($_SESSION["table_index"] >= 6 || $_SESSION["tries"] <= 0) {
-    echo "Game over";
-    echo "<form method='post'><input type='submit' name='try_again' value='Try again'>";
-    echo "<a href='index.php'><button type='button'>Main Screen</button></a></form>";
-    session_destroy();
-} else {
-    // Select a random image path or quote and answer from the current table
-    $tables = array("ability", "agent", "graffiti", "playercard", "weapon", "quote");
-    $table = $tables[$_SESSION["table_index"]];
+    // Function to initialize a new user
+    function initializeUser() {
+        global $connection;
 
-    // Retrieve preselected question from the dailychallenge table based on user preferences
-    $userIdentifier = $_COOKIE["user_identifier"];
+        // Retrieve the last user ID from the database
+        $queryLastId = "SELECT MAX(id) AS last_id FROM user";
+        $resultLastId = mysqli_query($connection, $queryLastId);
 
-    $query = "SELECT $table.`name`, $table.img, quote.quote
-              FROM dailychallenge
-              JOIN $table ON dailychallenge.${table}_id = $table.${table}_id
-              LEFT JOIN quote ON dailychallenge.quote_id = quote.quote_id
-              WHERE dailychallenge.user_identifier = '$userIdentifier'
-              ORDER BY RAND() LIMIT 1";
-
-    $result = mysqli_query($connection, $query);
-    if (mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-        $_SESSION["name"] = $row["name"];
-        if ($table === "quote") {
-            $_SESSION["quote"] = $row["quote"];
+        if ($resultLastId) {
+            $rowLastId = mysqli_fetch_assoc($resultLastId);
+            $lastId = $rowLastId['last_id'];
+            $userId = $lastId + 1;
         } else {
-            $_SESSION["image_path"] = $row["img"];
+            // If there are no users in the database, start with user ID 1
+            $userId = 1;
+        }
+
+        setcookie("user_id", $userId, time() + (86400 * 30), "/"); // Cookie lasts for 30 days
+
+        // Insert a new user into the database
+        $queryInsertUser = "INSERT INTO user (id, tries, current_table, winner) VALUES ('$userId', 5, 0, 0)";
+        mysqli_query($connection, $queryInsertUser);
+    }
+
+    // Function to process the user's guess
+    function processGuess($guess) {
+        global $connection;
+
+        // Retrieve user's current progress from the database
+        $userId = $_COOKIE["user_id"];
+        $querySelectUser = "SELECT * FROM user WHERE id = ?";
+        $stmtSelectUser = mysqli_prepare($connection, $querySelectUser);
+        mysqli_stmt_bind_param($stmtSelectUser, "i", $userId);
+        mysqli_stmt_execute($stmtSelectUser);
+        $resultSelectUser = mysqli_stmt_get_result($stmtSelectUser);
+
+        if ($resultSelectUser) {
+            $rowUser = mysqli_fetch_assoc($resultSelectUser);
+
+            // Get the current table based on the user's progress
+            $tables = array("ability", "agent", "graffiti", "playercard", "weapon", "quote");
+            $currentTable = $tables[$rowUser["current_table"]];
+
+            // Check if the user's guess is correct
+            $querySelectChallenge = "SELECT dailychallenge.id, $currentTable.name, $currentTable.img, quote.quote
+                FROM dailychallenge
+                JOIN $currentTable ON dailychallenge.{$currentTable}_id = $currentTable.id
+                LEFT JOIN quote ON dailychallenge.quote_id = quote.id
+                WHERE dailychallenge.id = 1"; // Change the ID based on your requirements
+
+            $stmtSelectChallenge = mysqli_prepare($connection, $querySelectChallenge);
+
+            if ($stmtSelectChallenge) {
+                mysqli_stmt_execute($stmtSelectChallenge);
+                $resultSelectChallenge = mysqli_stmt_get_result($stmtSelectChallenge);
+
+                if ($resultSelectChallenge) {
+                    $rowChallenge = mysqli_fetch_assoc($resultSelectChallenge);
+
+                    if ($guess == $rowChallenge["name"]) {
+                        // Reset tries and update current table
+                        $queryUpdateUser = "UPDATE user SET tries = 5, current_table = current_table + 1 WHERE id = ?";
+                        $stmtUpdateUser = mysqli_prepare($connection, $queryUpdateUser);
+                        mysqli_stmt_bind_param($stmtUpdateUser, "i", $userId);
+                        mysqli_stmt_execute($stmtUpdateUser);
+
+                        // Check if the user has answered all questions
+                        if ($rowUser["current_table"] >= 6) {
+                            // Display "You've won" if all questions are answered
+                            echo "You've won!";
+                            echo "<form method='post'><input type='submit' name='retry' value='Retry'>";
+                            echo "<a href='index.php'><button type='button'>Main Screen</button></a></form>";
+                            exit; // Stop execution to prevent further output
+                        }
+                    } else {
+                        // Decrement tries
+                        $queryUpdateUser = "UPDATE user SET tries = tries - 1 WHERE id = ?";
+                        $stmtUpdateUser = mysqli_prepare($connection, $queryUpdateUser);
+                        mysqli_stmt_bind_param($stmtUpdateUser, "i", $userId);
+                        mysqli_stmt_execute($stmtUpdateUser);
+                    }
+
+                    // Redirect to avoid form resubmission
+                    header("Location: {$_SERVER['PHP_SELF']}");
+                    exit;
+                } else {
+                    echo "Error in fetching challenge data: " . mysqli_error($connection);
+                }
+            } else {
+                echo "Error in preparing the statement: " . mysqli_error($connection);
+            }
         }
     }
 
-    // Output the image or quote and the guess form
-    if ($table === "quote") {
-        echo "<blockquote class='centered'>{$_SESSION['quote']}</blockquote><br>";
-    } else {
-        echo "<img class='img-size' src='{$_SESSION['image_path']}'><br>";
-    }
-    echo "<form method='post'>";
-    echo "<label for='guess'>Guess:</label>";
-    echo "<input type='text' name='guess' id='guess'>";
-    echo "<input type='submit' name='submit' value='Submit'>";
-    echo "</form>";
-    echo "Tries left: {$_SESSION['tries']}";
-}
+    // Function to display the challenge
+    function displayChallenge() {
+        global $connection;
 
-// Close database connection
-mysqli_close($connection);
-?>
+        // Retrieve user's current progress from the database
+        $userId = $_COOKIE["user_id"];
+        $querySelectUser = "SELECT * FROM user WHERE id = ?";
+        $stmtSelectUser = mysqli_prepare($connection, $querySelectUser);
+        mysqli_stmt_bind_param($stmtSelectUser, "i", $userId);
+        mysqli_stmt_execute($stmtSelectUser);
+        $resultSelectUser = mysqli_stmt_get_result($stmtSelectUser);
+
+        if ($resultSelectUser) {
+            $rowUser = mysqli_fetch_assoc($resultSelectUser);
+
+            // Get the current table based on the user's progress
+            $tables = array("ability", "agent", "graffiti", "playercard", "weapon", "quote");
+            $currentTable = $tables[$rowUser["current_table"]];
+
+            // Select the specific challenge from dailychallenge with ID 1
+            $querySelectChallenge = "SELECT dailychallenge.id, {$currentTable}.name, {$currentTable}.img, quote.quote
+                FROM dailychallenge
+                JOIN {$currentTable} ON dailychallenge.{$currentTable}_id = {$currentTable}.id
+                LEFT JOIN quote ON dailychallenge.quote_id = quote.id
+                WHERE dailychallenge.id = 1";
+            $stmtSelectChallenge = mysqli_prepare($connection, $querySelectChallenge);
+
+            if ($stmtSelectChallenge) {
+                mysqli_stmt_execute($stmtSelectChallenge);
+                $resultSelectChallenge = mysqli_stmt_get_result($stmtSelectChallenge);
+
+                if ($resultSelectChallenge) {
+                    $rowChallenge = mysqli_fetch_assoc($resultSelectChallenge);
+
+                    // Output the image or quote and the guess form
+                    if (isset($rowChallenge["img"])) {
+                        echo "<img class='img-size' src='{$rowChallenge['img']}'><br>";
+                    } elseif (isset($rowChallenge["quote"])) {
+                        echo "<blockquote class='centered'>{$rowChallenge['quote']}</blockquote><br>";
+                    }
+
+                    // Output the guess form
+                    echo "<form method='post'>";
+                    echo "<label for='guess'>Guess:</label>";
+                    echo "<input type='text' name='guess' id='guess'>";
+                    echo "<input type='submit' name='submit' value='Submit'>";
+                    echo "</form>";
+
+                    // Output the try count
+                    echo "Tries left: {$rowUser['tries']}";
+                } else {
+                    echo "Error in fetching challenge data: " . mysqli_error($connection);
+                }
+            } else {
+                echo "Error in preparing the statement: " . mysqli_error($connection);
+            }
+        }
+    }
+
+    // Check if form is submitted
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST["submit"])) {
+            processGuess($_POST["guess"]);
+        }
+    }
+
+    // Check if user is initialized
+    if (!isset($_COOKIE["user_id"])) {
+        initializeUser();
+    }
+
+    // Display challenge
+    displayChallenge();
+
+    // Close database connection
+    mysqli_close($connection);
+    ?>
+</body>
+</html>
