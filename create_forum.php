@@ -21,13 +21,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $content = mysqli_real_escape_string($connection, $_POST["content"]); // Sanitize input
   $createdBy = $_SESSION["username"]; // Get username from session
 
-  // Insert forum into database
-  $sql = "INSERT INTO forums (title, content, created_by) VALUES ('$title', '$content', '$createdBy')";
+  // Insert post into database
+  $sql = "INSERT INTO posts (title, content, created_by) VALUES ('$title', '$content', '$createdBy')";
   if (mysqli_query($connection, $sql)) {
-    echo "Forum created successfully!";
-    // Optionally, redirect to forum list or the newly created forum page
+    echo "post created successfully!";
+    // Optionally, redirect to post list or the newly created post page
   } else {
-    echo "Error creating forum: " . mysqli_error($connection);
+    echo "Error creating post: " . mysqli_error($connection);
   }
 }
 

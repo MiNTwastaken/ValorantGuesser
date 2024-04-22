@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Valorant Forums - Forum Details</title>
+  <title>Valorant Forum - Post Details</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -19,18 +19,18 @@
     die("Connection failed: " . mysqli_connect_error());
   }
 
-  // Get forum ID from URL parameter
-  $forumId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+  // Get post ID from URL parameter
+  $postId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-  // Check if forum ID is valid
-  if (!$forumId) {
-    echo "Invalid forum ID.";
+  // Check if post ID is valid
+  if (!$postId) {
+    echo "Invalid post ID.";
     exit;
   }
 
-  // Function to get forum details by ID
-  function getForumDetails($connection, $forumId) {
-    $sql = "SELECT * FROM forums WHERE id = $forumId";
+  // Function to get post details by ID
+  function getpostDetails($connection, $postId) {
+    $sql = "SELECT * FROM posts WHERE id = $postId";
     $result = mysqli_query($connection, $sql);
     if (mysqli_num_rows($result) == 1) {
       return mysqli_fetch_assoc($result);
@@ -39,18 +39,18 @@
     }
   }
 
-  // Get forum details
-  $forum = getForumDetails($connection, $forumId);
+  // Get post details
+  $post = getpostDetails($connection, $postId);
 
-  // Check if forum exists
-  if (!$forum) {
-    echo "Forum not found.";
+  // Check if post exists
+  if (!$post) {
+    echo "post not found.";
     exit;
   }
 
-  // Function to get comments for a forum
-  function getComments($connection, $forumId) {
-    $sql = "SELECT c.content, c.created_at, u.username FROM comments c JOIN users u ON c.user_id = u.id WHERE c.forum_id = $forumId ORDER BY c.created_at ASC";
+  // Function to get comments for a post
+  function getComments($connection, $postId) {
+    $sql = "SELECT c.content, c.created_at, u.username FROM comments c JOIN users u ON c.user_id = u.id WHERE c.post_id = $postId ORDER BY c.created_at ASC";
     $result = mysqli_query($connection, $sql);
     if (mysqli_num_rows($result) > 0) {
       return mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -59,27 +59,27 @@
     }
   }
 
-  // Get comments for this forum
-  $comments = getComments($connection, $forumId);
+  // Get comments for this post
+  $comments = getComments($connection, $postId);
   ?>
 
-  <h1><?php echo $forum['title']; ?></h1>
+  <h1><?php echo $post['title']; ?></h1>
 
-  <p>Created by: <?php echo $forum['created_by']; ?></p>
-  <p><?php echo $forum['content']; ?></p>
+  <p>Created by: <?php echo $post['created_by']; ?></p>
+  <p><?php echo $post['content']; ?></p>
 
   <?php
-  // Check if user is forum owner (compare usernames from session and forum)
-  $isForumOwner = $isLoggedIn && $forum['created_by'] == $_SESSION["username"];
+  // Check if user is post owner (compare usernames from session and post)
+  $ispostOwner = $isLoggedIn && $post['created_by'] == $_SESSION["username"];
   ?>
 
-  <?php if ($isForumOwner) : ?>
-    <h2>Edit Forum</h2>
-    <form action="edit_forum.php" method="post">
-      <input type="hidden" name="id" value="<?php echo $forum['id']; ?>">  <label for="title">Forum Title:</label>
-      <input type="text" name="title" id="title" value="<?php echo $forum['title']; ?>" required>
+  <?php if ($ispostOwner) : ?>
+    <h2>Edit post</h2>
+    <form action="edit_post.php" method="post">
+      <input type="hidden" name="id" value="<?php echo $post['id']; ?>">  <label for="title">post Title:</label>
+      <input type="text" name="title" id="title" value="<?php echo $post['title']; ?>" required>
       <label for="content">Content:</label>
-      <textarea name="content" id="content" required><?php echo $forum['content']; ?></textarea>
+      <textarea name="content" id="content" required><?php echo $post['content']; ?></textarea>
       <button type="submit">Save Changes</button>
     </form>
   <?php endif; ?>
@@ -101,7 +101,7 @@
   <?php if ($isLoggedIn) : ?>
     <h2>Leave a Comment</h2>
     <form action="add_comment.php" method="post">
-      <input type="hidden" name="forum_id" value="<?php echo $forumId; ?>">  
+      <input type="hidden" name="post_id" value="<?php echo $postId; ?>">  
       <textarea name="content" id="content" placeholder="Write your comment here..." required></textarea>
       <button type="submit">Post Comment</button>
     </form>

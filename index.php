@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Valorant Forums</title>
+  <title>Valorant post</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Valorant Forums</h1>
+  <h1>Valorant Forum</h1>
 
   <?php
   // Start session (if not already started)
@@ -26,9 +26,9 @@
     die("Connection failed: " . mysqli_connect_error());
   }
 
-  // Function to get all forums
-  function getAllForums($connection) {
-    $sql = "SELECT * FROM forums ORDER BY created_at DESC";
+  // Function to get all posts
+  function getAllposts($connection) {
+    $sql = "SELECT * FROM posts ORDER BY created_at DESC";
     $result = mysqli_query($connection, $sql);
     if (mysqli_num_rows($result) > 0) {
       return mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -37,40 +37,40 @@
     }
   }
 
-  // Get all forums
-  $forums = getAllForums($connection);
+  // Get all posts
+  $posts = getAllposts($connection);
   ?>
 
-  <h2>Current Forums</h2>
+  <h2>Current posts</h2>
 
-  <?php if ($forums) : ?>
+  <?php if ($posts) : ?>
     <ul>
-		<?php foreach ($forums as $forum) : ?>
+		<?php foreach ($posts as $post) : ?>
 		<li>
-			<h2><?php echo $forum['title']; ?></h2>
-			(Created by: <?php echo $forum['created_by']; ?>)<br>
+			<h2><?php echo $post['title']; ?></h2>
+			(Created by: <?php echo $post['created_by']; ?>)<br>
 			<?php
 			// Shorten content with character limit and add ellipsis
-			$contentSnippet = substr($forum['content'], 0, 100) . (strlen($forum['content']) > 100 ? "..." : "");
+			$contentSnippet = substr($post['content'], 0, 100) . (strlen($post['content']) > 100 ? "..." : "");
 			echo $contentSnippet;
 			?>
 			<br>
-			<a href="forum.php?id=<?php echo $forum['id']; ?>">Open Forum</a>
+			<a href="post.php?id=<?php echo $post['id']; ?>">Open post</a>
 		</li>
       <?php endforeach; ?>
     </ul>
   <?php else : ?>
-    <p>No forums created yet.</p>
+    <p>No posts created yet.</p>
   <?php endif; ?>
 
   <?php if ($isLoggedIn) : ?>
-    <h2>Create a New Forum</h2>
-    <form action="create_forum.php" method="post">
-      <label for="title">Forum Title:</label>
+    <h2>Create a New post</h2>
+    <form action="create_post.php" method="post">
+      <label for="title">post Title:</label>
       <input type="text" name="title" id="title" required>
       <label for="content">Content:</label>
       <textarea name="content" id="content" required></textarea>
-      <button type="submit">Create Forum</button>
+      <button type="submit">Create post</button>
     </form>
 
 	<form action="logout.php" method="post">
@@ -78,7 +78,7 @@
     </form>
 
   <?php else : ?>
-    <p>To create forums, please log in or register.</p>
+    <p>To create posts, please log in or register.</p>
     <a href="login.php">Login/Register</a>
   <?php endif; ?>
 
