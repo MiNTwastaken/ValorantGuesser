@@ -1,0 +1,298 @@
+<mxfile host="app.diagrams.net" modified="2024-04-30T15:15:53.709Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" etag="PJwVdPpVb7haH3gzoGuO" version="23.1.8" type="device">
+  <diagram name="Page-1" id="7C-WFBa_drby8j5as7WV">
+    <mxGraphModel dx="1572" dy="1077" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="gzTO_7dKEMfPrGxTYMJ8-1" value="Lietotājs" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="62" y="358" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gzTO_7dKEMfPrGxTYMJ8-3" value="Admins" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="62" y="631" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gzTO_7dKEMfPrGxTYMJ8-5" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="122" y="-149" width="1215" height="952" as="geometry" />
+        </mxCell>
+        <mxCell id="gzTO_7dKEMfPrGxTYMJ8-12" value="Atvērt foruma lapu" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="198" y="198" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-1" value="Atvērt mini spēles lapu" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="198" y="276" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-3" value="Atvērt Wiki lapu" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="198" y="360" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-4" value="Ielogoties" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="198" y="444" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-5" value="Uzspiezt uz ziņu" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="616" y="47" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-6" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;exitX=0.971;exitY=0.257;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="gzTO_7dKEMfPrGxTYMJ8-12" target="2nAq9BdPTa0NXWRsoI7L-7">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-4" y="283.98" as="sourcePoint" />
+            <mxPoint x="396" y="278" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-7" value="Skatīt visas ziņas" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="427" y="102" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-9" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.04;entryY=0.716;entryDx=0;entryDy=0;dashed=1;entryPerimeter=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-7" target="2nAq9BdPTa0NXWRsoI7L-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="558" y="261" as="sourcePoint" />
+            <mxPoint x="665" y="261" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-14" value="Uzrakstīt komentāriju" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="806" y="107" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-15" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.98;exitY=0.687;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;exitPerimeter=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-5" target="2nAq9BdPTa0NXWRsoI7L-14">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="717" y="164" as="sourcePoint" />
+            <mxPoint x="785" y="128" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-16" value="Uzspiezt&amp;nbsp;patīk" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="616" y="125" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-18" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.059;entryY=0.808;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="gzTO_7dKEMfPrGxTYMJ8-1" target="gzTO_7dKEMfPrGxTYMJ8-12">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="238" as="sourcePoint" />
+            <mxPoint x="437" y="238" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-19" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="2nAq9BdPTa0NXWRsoI7L-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="99" y="375" as="sourcePoint" />
+            <mxPoint x="198" y="304" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-21" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="gzTO_7dKEMfPrGxTYMJ8-1" target="2nAq9BdPTa0NXWRsoI7L-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="42" y="589" as="sourcePoint" />
+            <mxPoint x="196" y="391" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-22" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="2nAq9BdPTa0NXWRsoI7L-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="96" y="408" as="sourcePoint" />
+            <mxPoint x="142" y="510" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-23" value="Uzspiezt&amp;nbsp;patīk uz komentārija" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="806" y="17" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-25" value="Skatīt visas mini spēles" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="427" y="276" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-26" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-1" target="2nAq9BdPTa0NXWRsoI7L-25">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320.00000000000136" y="302.9999999999999" as="sourcePoint" />
+            <mxPoint x="425" y="344" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-28" value="Veiksmīga ieiešana aizved uz forumu" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="355" y="436" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-32" value="Spēlēt spēli" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="616" y="220" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-34" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-25" target="2nAq9BdPTa0NXWRsoI7L-32">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="645" y="346" as="sourcePoint" />
+            <mxPoint x="752" y="346" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-35" value="Izveidot spēli" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="616" y="291" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-36" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-25" target="2nAq9BdPTa0NXWRsoI7L-35">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="538" y="403" as="sourcePoint" />
+            <mxPoint x="605" y="347" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-37" value="Spēlēt pēc izveidotajiem noteikumiem" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="806" y="220" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-38" value="Izveidot noteikumus un spēles tēmu" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="291" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-39" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-32" target="2nAq9BdPTa0NXWRsoI7L-37">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="728" y="309" as="sourcePoint" />
+            <mxPoint x="795" y="253" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-40" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-35" target="2nAq9BdPTa0NXWRsoI7L-38">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="682" y="370" as="sourcePoint" />
+            <mxPoint x="749" y="385" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-51" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-5" target="2nAq9BdPTa0NXWRsoI7L-23">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="768" y="83" as="sourcePoint" />
+            <mxPoint x="854" y="122" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-52" value="Izveidot savu ziņu" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="-24" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-53" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.31;entryY=0.972;entryDx=0;entryDy=0;dashed=1;exitX=0.634;exitY=0.031;exitDx=0;exitDy=0;exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-7" target="2nAq9BdPTa0NXWRsoI7L-52">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="87.5" as="sourcePoint" />
+            <mxPoint x="451" y="6.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-54" value="Ievadīt tēmu" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="559" y="-139" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-56" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.435;entryY=0.975;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-52" target="2nAq9BdPTa0NXWRsoI7L-54">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="441" y="-28.5" as="sourcePoint" />
+            <mxPoint x="645" y="-91" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-57" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;exitX=0.976;exitY=0.64;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-7" target="2nAq9BdPTa0NXWRsoI7L-16">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="516" y="203" as="sourcePoint" />
+            <mxPoint x="598" y="177" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-70" value="Ievadīt tekstu" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="688" y="-123" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-71" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=0.98;exitY=0.305;exitDx=0;exitDy=0;entryX=0.055;entryY=0.771;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-52" target="2nAq9BdPTa0NXWRsoI7L-70">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="624" y="-5" as="sourcePoint" />
+            <mxPoint x="655" y="-81" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-72" value="Pievienot bildi vai video" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="705" y="-53" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-73" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=0.023;exitY=0.643;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-72" target="2nAq9BdPTa0NXWRsoI7L-52">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="553" y="93" as="sourcePoint" />
+            <mxPoint x="678" y="20" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-76" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-3" target="2nAq9BdPTa0NXWRsoI7L-77">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="358" y="408" as="sourcePoint" />
+            <mxPoint x="416" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-77" value="Skatīt informāciju" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="427" y="360" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-79" value="Filtrēt informāciju" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="597" y="370" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-80" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-79" target="2nAq9BdPTa0NXWRsoI7L-77">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="509" y="468" as="sourcePoint" />
+            <mxPoint x="616" y="468" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-82" value="Meklēt informāciju" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="529" y="430" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-83" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-82" target="2nAq9BdPTa0NXWRsoI7L-77">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="497" y="454" as="sourcePoint" />
+            <mxPoint x="449" y="444" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-84" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-28" target="2nAq9BdPTa0NXWRsoI7L-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="390" y="532" as="sourcePoint" />
+            <mxPoint x="342" y="522" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-86" value="Reģistrēties" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="325" y="511" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-88" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-4" target="2nAq9BdPTa0NXWRsoI7L-86">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="598" as="sourcePoint" />
+            <mxPoint x="327" y="598" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-89" value="E-pasta apstiprināšana" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="499" y="511" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-90" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-86" target="2nAq9BdPTa0NXWRsoI7L-89">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="453" y="554" as="sourcePoint" />
+            <mxPoint x="494" y="579" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-92" value="Pārvaldīt lietotājus" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="467" y="594" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-93" value="Pārvaldīt ziņas, spēles" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="467" y="672" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-95" value="Ielogoties" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="151" y="631" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-96" value="Admin panelis" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="313" y="631" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-97" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-95" target="2nAq9BdPTa0NXWRsoI7L-96">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="312" y="505" as="sourcePoint" />
+            <mxPoint x="353" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-99" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=0.984;exitY=0.289;exitDx=0;exitDy=0;entryX=0.033;entryY=0.696;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-96" target="2nAq9BdPTa0NXWRsoI7L-92">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="283" y="671" as="sourcePoint" />
+            <mxPoint x="323" y="671" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-100" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;entryX=0.05;entryY=0.308;entryDx=0;entryDy=0;exitX=0.967;exitY=0.781;exitDx=0;exitDy=0;exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-96" target="2nAq9BdPTa0NXWRsoI7L-93">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="283" y="764" as="sourcePoint" />
+            <mxPoint x="323" y="671" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-101" value="Izveidot par adminu" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="647" y="560" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-102" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.982;entryY=0.275;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-101" target="2nAq9BdPTa0NXWRsoI7L-92">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="443" y="658" as="sourcePoint" />
+            <mxPoint x="481" y="646" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-103" value="Dzēst, rediģēt" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="647" y="635" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-104" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=0.041;exitY=0.268;exitDx=0;exitDy=0;entryX=0.999;entryY=0.625;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-103" target="2nAq9BdPTa0NXWRsoI7L-92">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="649" y="620" as="sourcePoint" />
+            <mxPoint x="589" y="641" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-105" value="Dzēst" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="616" y="710" width="122" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-106" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="2nAq9BdPTa0NXWRsoI7L-105" target="2nAq9BdPTa0NXWRsoI7L-93">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="595" y="800" as="sourcePoint" />
+            <mxPoint x="532" y="781" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2nAq9BdPTa0NXWRsoI7L-107" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.059;entryY=0.808;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="gzTO_7dKEMfPrGxTYMJ8-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="38" y="785" as="sourcePoint" />
+            <mxPoint x="151" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
