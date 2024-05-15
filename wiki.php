@@ -1,18 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Valorant Guesser Admin Panel</title>
+  <title>Valorant Wiki</title>
   <link rel="stylesheet" href="styless.css">
 </head>
 <body>
-  <?php
-  session_start();
-
-  if (!isset($_SESSION["admin"]) || $_SESSION["admin"] !== 1) {
-    header("Location: login.php");
-  }
-
-  ?>
 <div class="navbar">
     <div class="container">
         <a href="index.php">Valorant Fanpage</a>
@@ -47,6 +39,7 @@
             </div>
 
             <?php
+            session_start();
             $isLoggedIn = isset($_SESSION["username"]);
             ?>
 
@@ -73,22 +66,35 @@
         </nav>
     </div>
 </div>
-  <h1>Valorant Guesser Admin Panel</h1>
-  <p>Welcome, <?php echo $_SESSION["username"];?>. Manage everything here</p>
 
-  <form method="post" action="show_data.php">
-    <select name="data_type">
-      <option value="ability">Abilities</option>
-      <option value="agent">Agents</option>
-      <option value="graffiti">Graffiti</option>
-      <option value="playercard">Player Cards</option>
-      <option value="quote">Quotes</option>
-      <option value="weapon">Weapons</option>
-    </select>
-    <button type="submit">Show Data</button>
-  </form>
+  <div class="content">
+    <h1>Valorant Wiki</h1>
 
-  <a href="login.php">Logout</a>
+    <p>Welcome to the Valorant Wiki! Here you'll find comprehensive information about the game.</p>
 
+    <h2>Agents</h2>
+    <div id="agents-container">
+      </div>
+
+    <h2>Weapons</h2>
+    <div id="weapons-container">
+      </div>
+
+    <h2>Maps</h2>
+    <div id="maps-container">
+      </div>
+
+    <h2>Strategies</h2>
+    <p>This section will cover various strategies for different aspects of the game, including:</p>
+    <ul>
+      <li>Attack and Defense Strategies</li>
+      <li>Agent Compositions</li>
+      <li>Economy Management</li>
+      <li>Aiming Techniques</li>
+    </ul>
+
+    </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

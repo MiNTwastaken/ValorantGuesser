@@ -1,118 +1,139 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Valorant Forum - Post Details</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Valorant Forum</title>
+  <link rel="stylesheet" href="styless.css">
 </head>
 <body>
+<div class="navbar">
+    <div class="container">
+        <a href="index.php">Valorant Fanpage</a>
+        <nav>
+            <div class="dropdown">
+                <a href="wiki.php" class="dropdown-btn">Wiki</a>
+                <div class="dropdown-content">
+                    <a href="wiki.php#agents">Agents</a>
+                    <a href="wiki.php#weapons">Weapons</a>
+                    <a href="wiki.php#maps">Maps</a>
+                    <a href="wiki.php#strategies">Strategies</a>
+                </div>
+            </div>
 
-  <?php
-  // Start session (if not already started)
-  session_start();
+            <div class="dropdown">
+                <a href="forum.php" class="dropdown-btn">Forum</a>
+                <div class="dropdown-content">
+                    <a href="forum.php#general">General Discussion</a>
+                    <a href="forum.php#competitive">Competitive Play</a>
+                    <a href="forum.php#lore">Lore & Story</a>
+                    <a href="forum.php#creations">Community Creations</a>
+                </div>
+            </div>
+            
+            <div class="dropdown">
+                <a href="minigames.php" class="dropdown-btn">Minigames</a>
+                <div class="dropdown-content">
+                    <a href="minigames.php#daily">Daily Quiz</a>
+                    <a href="minigames.php#oneshot">One Shot</a>
+                    <a href="minigames.php#freeplay">Free Play</a>
+                </div>
+            </div>
 
-  // Check if user is logged in
-  $isLoggedIn = isset($_SESSION["username"]);
+            <?php
+            session_start();
+            $isLoggedIn = isset($_SESSION["username"]);
+            ?>
 
-  // Database Connection (replace with your connection details)
-  $connection = mysqli_connect("localhost:3306", "root", "", "valorantguesser");
-  if (!$connection) {
-    die("Connection failed: " . mysqli_connect_error());
-  }
+            <?php if ($isLoggedIn && isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) : ?>
+                <div class="dropdown">
+                    <a href="admin.php" class="dropdown-btn">Admin Panel</a>
+                    <div class="dropdown-content">
+                        <a href="admin.php#users">Manage Users</a> 
+                    </div>
+                </div>
+            <?php endif; ?>
 
-  // Get post ID from URL parameter
-  $postId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-  // Check if post ID is valid
-  if (!$postId) {
-    echo "Invalid post ID.";
-    exit;
-  }
+            <?php if ($isLoggedIn) : ?>
+                <div class="logged-in-user">
+                    <a href="profile.php" class="profile-link"><?php echo $_SESSION["username"]; ?></a>
+                    <form action="logout.php" method="post">
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>
+            <?php else : ?>
+                <a href="login.php" class="login-btn">Login</a>
+            <?php endif; ?>
+        </nav>
+    </div>
+</div>
 
-  // Function to get post details by ID
-  function getpostDetails($connection, $postId) {
-    $sql = "SELECT * FROM posts WHERE id = $postId";
-    $result = mysqli_query($connection, $sql);
-    if (mysqli_num_rows($result) == 1) {
-      return mysqli_fetch_assoc($result);
-    } else {
-      return false;
-    }
-  }
+  <div class="content">
 
-  // Get post details
-  $post = getpostDetails($connection, $postId);
+    <?php
+      // Database Connection (replace with your connection details)
+      $connection = mysqli_connect("localhost:3306", "root", "", "valorantguesser");
+      if (!$connection) {
+        die("Connection failed: " . mysqli_connect_error());
+      }
 
-  // Check if post exists
-  if (!$post) {
-    echo "post not found.";
-    exit;
-  }
+      // Function to get all posts
+      function getAllposts($connection) {
+        $sql = "SELECT * FROM posts ORDER BY created_at DESC";
+        $result = mysqli_query($connection, $sql);
+        if (mysqli_num_rows($result) > 0) {
+          return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        } else {
+          return false;
+        }
+      }
 
-  // Function to get comments for a post
-  function getComments($connection, $postId) {
-    $sql = "SELECT c.content, c.created_at, u.username FROM comments c JOIN users u ON c.user_id = u.id WHERE c.post_id = $postId ORDER BY c.created_at ASC";
-    $result = mysqli_query($connection, $sql);
-    if (mysqli_num_rows($result) > 0) {
-      return mysqli_fetch_all($result, MYSQLI_ASSOC);
-    } else {
-      return false;
-    }
-  }
+      // Get all posts
+      $posts = getAllposts($connection);
+    ?>
 
-  // Get comments for this post
-  $comments = getComments($connection, $postId);
-  ?>
+    <h2>Current posts</h2>
 
-  <h1><?php echo $post['title']; ?></h1>
+    <?php if ($posts) : ?>
+      <ul>
+        <?php foreach ($posts as $post) : ?>
+          <li>
+            <h2><?php echo $post['title']; ?></h2>
+            (Created by: <?php echo $post['created_by']; ?>)<br>
+            <?php
+            // Shorten content with character limit and add ellipsis
+            $contentSnippet = substr($post['content'], 0, 100) . (strlen($post['content']) > 100 ? "..." : "");
+            echo $contentSnippet;
+            ?>
+            <br>
+            <a href="view_post.php?id=<?php echo $post['id']; ?>">Open post</a>
+          </li>
+        <?php endforeach; ?>
+      </ul>
+    <?php else : ?>
+      <p>No posts created yet.</p>
+    <?php endif; ?>
 
-  <p>Created by: <?php echo $post['created_by']; ?></p>
-  <p><?php echo $post['content']; ?></p>
+    <?php if ($isLoggedIn) : ?>
+      <h2>Create a New post</h2>
+      <form action="create_post.php" method="post">
+        <label for="title">post Title:</label>
+        <input type="text" name="title" id="title" required>
+        <label for="content">Content:</label>
+        <textarea name="content" id="content" required></textarea>
+        <button type="submit">Create post</button>
+        </form>
 
-  <?php
-  // Check if user is post owner (compare usernames from session and post)
-  $ispostOwner = $isLoggedIn && $post['created_by'] == $_SESSION["username"];
-  ?>
+<?php else : ?>
+  <p>To create posts, please log in or register.</p>
+<?php endif; ?>
 
-  <?php if ($ispostOwner) : ?>
-    <h2>Edit post</h2>
-    <form action="edit_post.php" method="post">
-      <input type="hidden" name="id" value="<?php echo $post['id']; ?>">  <label for="title">post Title:</label>
-      <input type="text" name="title" id="title" value="<?php echo $post['title']; ?>" required>
-      <label for="content">Content:</label>
-      <textarea name="content" id="content" required><?php echo $post['content']; ?></textarea>
-      <button type="submit">Save Changes</button>
-    </form>
-  <?php endif; ?>
-
-  <h2>Comments</h2>
-
-  <?php if ($comments) : ?>
-    <ul>
-      <?php foreach ($comments as $comment) : ?>
-        <li>
-          <strong><?php echo $comment['username']; ?>:</strong> <?php echo $comment['content']; ?> (<?php echo date('Y-m-d H:i:s', strtotime($comment['created_at'])); ?>)
-        </li>
-      <?php endforeach; ?>
-    </ul>
-  <?php else : ?>
-    <p>No comments yet.</p>
-  <?php endif; ?>
-
-  <?php if ($isLoggedIn) : ?>
-    <h2>Leave a Comment</h2>
-    <form action="add_comment.php" method="post">
-      <input type="hidden" name="post_id" value="<?php echo $postId; ?>">  
-      <textarea name="content" id="content" placeholder="Write your comment here..." required></textarea>
-      <button type="submit">Post Comment</button>
-    </form>
-  <?php else : ?>
-    <p>Please log in to leave a comment.</p>
-  <?php endif; ?>
-
-  <?php
+<?php
   // Close database connection
   mysqli_close($connection);
-  ?>
+?>
+</div>
 
+<script src="script.js"></script>
 </body>
 </html>
+

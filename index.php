@@ -1,97 +1,97 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Valorant post</title>
-  <link rel="stylesheet" href="styles.css">
+    <title>Valorant Fanpage</title>
+    <link rel="stylesheet" href="styless.css">
 </head>
 <body>
-  <h1>Valorant Forum</h1>
 
-  <?php
-  // Start session (if not already started)
-  session_start();
+    <div class="navbar">
+        <div class="container">
+            <a href="index.php">Valorant Fanpage</a>
+            <nav>
+                <div class="dropdown">
+                    <a href="wiki.php" class="dropdown-btn">Wiki</a>
+                    <div class="dropdown-content">
+                        <a href="wiki.php#agents">Agents</a>
+                        <a href="wiki.php#weapons">Weapons</a>
+                        <a href="wiki.php#maps">Maps</a>
+                        <a href="wiki.php#strategies">Strategies</a>
+                    </div>
+                </div>
 
-  // Check if user is logged in
-  $isLoggedIn = isset($_SESSION["username"]);
+                <div class="dropdown">
+                    <a href="forum.php" class="dropdown-btn">Forum</a>
+                    <div class="dropdown-content">
+                        <a href="forum.php#general">General Discussion</a>
+                        <a href="forum.php#competitive">Competitive Play</a>
+                        <a href="forum.php#lore">Lore & Story</a>
+                        <a href="forum.php#creations">Community Creations</a>
+                    </div>
+                </div>
+                
+                <div class="dropdown">
+                    <a href="minigames.php" class="dropdown-btn">Minigames</a>
+                    <div class="dropdown-content">
+                        <a href="minigames.php#daily">Daily Quiz</a>
+                        <a href="minigames.php#oneshot">One Shot</a>
+                        <a href="minigames.php#freeplay">Free Play</a>
+                    </div>
+                </div>
 
-  if ($isLoggedIn) {
-    echo "<h2>Welcome back, " . $_SESSION["username"] . "!</h2>";
-  }
-  ?>
+                <?php
+                session_start();
+                $isLoggedIn = isset($_SESSION["username"]);
+                ?>
 
-  <?php
-  // Database Connection (replace with your connection details)
-  $connection = mysqli_connect("localhost:3306", "root", "", "valorantguesser");
-  if (!$connection) {
-    die("Connection failed: " . mysqli_connect_error());
-  }
+                <?php if ($isLoggedIn && isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) : ?>
+                    <div class="dropdown">
+                        <a href="admin.php" class="dropdown-btn">Admin Panel</a>
+                        <div class="dropdown-content">
+                            <a href="admin.php#users">Manage Users</a> 
+                        </div>
+                    </div>
+                <?php endif; ?>
 
-  // Function to get all posts
-  function getAllposts($connection) {
-    $sql = "SELECT * FROM posts ORDER BY created_at DESC";
-    $result = mysqli_query($connection, $sql);
-    if (mysqli_num_rows($result) > 0) {
-      return mysqli_fetch_all($result, MYSQLI_ASSOC);
-    } else {
-      return false;
-    }
-  }
 
-  // Get all posts
-  $posts = getAllposts($connection);
-  ?>
+                <?php if ($isLoggedIn) : ?>
+                    <div class="logged-in-user">
+                        <a href="profile.php" class="profile-link"><?php echo $_SESSION["username"]; ?></a>
+                        <form action="logout.php" method="post">
+                            <button type="submit">Logout</button>
+                        </form>
+                    </div>
+                <?php else : ?>
+                    <a href="login.php" class="login-btn">Login</a>
+                <?php endif; ?>
+            </nav>
+        </div>
+    </div>
 
-  <h2>Current posts</h2>
+    <div class="content">
+        <section class="hero"> 
+            <h2>Welcome to the Ultimate Valorant Fan Hub!</h2>
+            <p>Ignite your passion for Valorant in our vibrant community! Dive into the in-depth knowledge of our Wiki, strategize with fellow players on the Forum, and test your skills with our thrilling Minigames.</p>
+        </section>
 
-  <?php if ($posts) : ?>
-    <ul>
-		<?php foreach ($posts as $post) : ?>
-		<li>
-			<h2><?php echo $post['title']; ?></h2>
-			(Created by: <?php echo $post['created_by']; ?>)<br>
-			<?php
-			// Shorten content with character limit and add ellipsis
-			$contentSnippet = substr($post['content'], 0, 100) . (strlen($post['content']) > 100 ? "..." : "");
-			echo $contentSnippet;
-			?>
-			<br>
-			<a href="post.php?id=<?php echo $post['id']; ?>">Open post</a>
-		</li>
-      <?php endforeach; ?>
-    </ul>
-  <?php else : ?>
-    <p>No posts created yet.</p>
-  <?php endif; ?>
+        <section class="features">
+            <h3>What Awaits You?</h3>
+            <ul>
+                <li><strong>Master the Game:</strong> Our Wiki is your go-to resource for agent guides, weapon stats, map breakdowns, and advanced strategies.</li>
+                <li><strong>Connect and Discuss:</strong> Join the conversation in our Forum, share your experiences, debate the meta, and forge friendships with other Valorant enthusiasts.</li>
+                <li><strong>Challenge Yourself:</strong> Put your knowledge to the test with our Daily Quizzes, Test your aim at the Aim Trainer Minigame, and guess countless things Free Play.</li>
+            </ul>
+        </section>
 
-  <?php if ($isLoggedIn) : ?>
-    <h2>Create a New post</h2>
-    <form action="create_post.php" method="post">
-      <label for="title">post Title:</label>
-      <input type="text" name="title" id="title" required>
-      <label for="content">Content:</label>
-      <textarea name="content" id="content" required></textarea>
-      <button type="submit">Create post</button>
-    </form>
+        <section class="call-to-action">
+            <h3>Ready to Join the Fun?</h3>
+            <p>Don't miss out on the action! Create your account today and unlock a world of Valorant knowledge, camaraderie, and excitement.</p>
+            <?php if (!$isLoggedIn) : ?>
+                <a href="register.php" class="login-btn">Register Now</a> 
+            <?php endif; ?>
+        </section>
+    </div>
 
-	<form action="logout.php" method="post">
-      <button type="submit">Logout</button>
-    </form>
-
-  <?php else : ?>
-    <p>To create posts, please log in or register.</p>
-    <a href="login.php">Login/Register</a>
-  <?php endif; ?>
-
-  <p>Play a game</p>
-  <form>
-    <button formaction="daily.php"></button>
-    <button formaction="oneshot.php"></button>
-    <button formaction="freeplay.php"></button>
-  </form>
-
-  <?php
-  // Close database connection
-  mysqli_close($connection);
-  ?>
+    <script src="script.js"></script>
 </body>
 </html>

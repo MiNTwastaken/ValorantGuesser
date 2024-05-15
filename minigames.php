@@ -1,18 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Valorant Guesser Admin Panel</title>
+  <title>Valorant Minigames</title>
   <link rel="stylesheet" href="styless.css">
 </head>
 <body>
-  <?php
-  session_start();
-
-  if (!isset($_SESSION["admin"]) || $_SESSION["admin"] !== 1) {
-    header("Location: login.php");
-  }
-
-  ?>
 <div class="navbar">
     <div class="container">
         <a href="index.php">Valorant Fanpage</a>
@@ -47,6 +39,7 @@
             </div>
 
             <?php
+            session_start();
             $isLoggedIn = isset($_SESSION["username"]);
             ?>
 
@@ -73,22 +66,29 @@
         </nav>
     </div>
 </div>
-  <h1>Valorant Guesser Admin Panel</h1>
-  <p>Welcome, <?php echo $_SESSION["username"];?>. Manage everything here</p>
 
-  <form method="post" action="show_data.php">
-    <select name="data_type">
-      <option value="ability">Abilities</option>
-      <option value="agent">Agents</option>
-      <option value="graffiti">Graffiti</option>
-      <option value="playercard">Player Cards</option>
-      <option value="quote">Quotes</option>
-      <option value="weapon">Weapons</option>
-    </select>
-    <button type="submit">Show Data</button>
-  </form>
+  <div class="content">
+    <h1>Valorant Minigames</h1>
+    <p>Test your Valorant skills and knowledge with these fun minigames!</p>
 
-  <a href="login.php">Logout</a>
-
+    <div class="minigame-grid">
+      <div class="minigame">
+        <h2>Daily Quiz</h2>
+        <p>Answer questions about Valorant lore, agents, and gameplay to test your knowledge.</p>
+        <a href="oneshot.php">Play Daily Quiz</a>
+      </div>
+      <div class="minigame">
+        <h2>One Shot</h2>
+        <p>Sharpen your aim and reflexes by eliminating targets within a time limit.</p>
+        <a href="aimtrainer.php">Play One Shot</a>
+      </div>
+      <div class="minigame">
+        <h2>Free Play</h2>
+        <p>Practice your shooting skills and explore maps in a relaxed environment.</p>
+        <a href="freeplay.php">Play Free Play</a>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>

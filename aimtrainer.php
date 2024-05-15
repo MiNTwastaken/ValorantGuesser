@@ -1,18 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Valorant Guesser Admin Panel</title>
-  <link rel="stylesheet" href="styless.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aim Trainer</title>
+    <link rel="stylesheet" href="styless.css">
 </head>
 <body>
-  <?php
-  session_start();
-
-  if (!isset($_SESSION["admin"]) || $_SESSION["admin"] !== 1) {
-    header("Location: login.php");
-  }
-
-  ?>
 <div class="navbar">
     <div class="container">
         <a href="index.php">Valorant Fanpage</a>
@@ -47,6 +41,7 @@
             </div>
 
             <?php
+            session_start();
             $isLoggedIn = isset($_SESSION["username"]);
             ?>
 
@@ -73,22 +68,12 @@
         </nav>
     </div>
 </div>
-  <h1>Valorant Guesser Admin Panel</h1>
-  <p>Welcome, <?php echo $_SESSION["username"];?>. Manage everything here</p>
-
-  <form method="post" action="show_data.php">
-    <select name="data_type">
-      <option value="ability">Abilities</option>
-      <option value="agent">Agents</option>
-      <option value="graffiti">Graffiti</option>
-      <option value="playercard">Player Cards</option>
-      <option value="quote">Quotes</option>
-      <option value="weapon">Weapons</option>
-    </select>
-    <button type="submit">Show Data</button>
-  </form>
-
-  <a href="login.php">Logout</a>
-
+    <h1>Aim Trainer</h1>
+    <div id="game-container">
+        <div id="target"></div>
+    </div>
+    <div id="scoreboard">0</div>
+    <button id="start-button">Start Game</button>
+    <script src="script.js"></script>
 </body>
 </html>

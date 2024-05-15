@@ -1,73 +1,66 @@
-// List of questions and answers
-const questions = [
-    {
-        question: "Guess the agent's ability:",
-        answer: "Aftershock",
-    },
-    {
-        question: "Guess the agent that has this ability:",
-        answer: "Breach",
-    },
-    {
-        question: "Guess the name of the weapon's appearance:",
-        answer: "Oni phantom",
-    },
-    {
-        question: "Guess the agent saying the quote: 'You want to play? Let's play.'",
-        answer: "Chamber",
-    },
-    {
-        question: "Guess the graffiti:",
-        answer: "What's That?",
-    },
-    {
-        question: "Guess the name of the picture on the player's card:",
-        answer: "Cosmic Origin",
-    },
-];
+const dropdownBtns = document.querySelectorAll('.dropdown-btn');
+const dropdownContents = document.querySelectorAll('.dropdown-content');
 
-// Initialize game variables
-let currentQuestion = 0;
-let numGuesses = 0;
-let numCorrect = 0;
+dropdownBtns.forEach((btn, index) => {
+    btn.addEventListener('mouseover', () => {
+        dropdownContents[index].style.display = 'block';
+    });
+
+    btn.addEventListener('mouseout', () => {
+        dropdownContents[index].style.display = 'none';
+    });
+});
+
+
+const target = document.getElementById('target');
+const scoreboard = document.getElementById('scoreboard');
+const startButton = document.getElementById('start-button');
 let score = 0;
-let highscores = [];
+let startTime; 
+let targetCount = 30; 
 
-// Display the current question and guess input
-function displayQuestion() {
-    const questionDiv = document.getElementById("question");
-    questionDiv.innerHTML = questions[currentQuestion].question;
-    const guessDiv = document.getElementById("guess");
-    guessDiv.innerHTML = `<input type="text" id="guess-input" name="guess" placeholder="Enter your guess">`;
+target.addEventListener('click', () => {
+  score++;
+  scoreboard.textContent = score;
+  resetTarget();
+  if (score >= targetCount) {
+    gameOver();
+  }
+});
+
+function resetTarget() {
+  let topPosition = Math.random() * (100 - target.clientHeight) + '%';
+  let leftPosition = Math.random() * (100 - target.clientWidth) + '%';
+  target.style.top = topPosition;
+  target.style.left = leftPosition;
+  target.style.backgroundColor = 'red';
 }
 
-// Check the user's guess and display the result
-function checkAnswer() {
-    const guessInput = document.getElementById("guess-input");
-    const guess = guessInput.value.toLowerCase().trim();
-    guessInput.value = "";
-    numGuesses++;
-    if (guess === questions[currentQuestion].answer.toLowerCase()) {
-        numCorrect++;
-        score += 100;
-        const resultDiv = document.getElementById("result");
-        resultDiv.innerHTML = `<p>Correct!</p>`;
-    } else {
-        const resultDiv = document.getElementById("result");
-        resultDiv.innerHTML = `<p>Incorrect. Try again.</p>`;
-    }
-    if (numGuesses >= 5) {
-        numGuesses = 0;
-        currentQuestion++;
-    }
-    if (currentQuestion < questions.length) {
-        displayQuestion();
-    } else {
-        endGame();
-    }
+function gameOver() {
+  const endTime = Date.now();
+  if (startTime) {
+    const totalTime = (endTime - startTime) / 1000; 
+    alert(`You hit ${score} targets in ${totalTime.toFixed(2)} seconds!`);
+  } else {
+    alert("Game hasn't started yet!"); 
+  }
+  score = 0;
+  startButton.disabled = false; 
 }
 
-// End the game and display the final score and highscores
-function endGame() {
-    const scoreDiv = document.getElementById("score");
+function startGame() {
+  startTime = Date.now(); 
+  score = 0;
+  scoreboard.textContent = score; 
+  resetTarget();
+  startButton.disabled = true;
 }
+
+startButton.addEventListener('click', startGame);
+
+document.addEventListener('click', (event) => {
+  if (event.target !== startButton) {
+    target.style.backgroundColor = 'lightgray';
+    event.preventDefault();
+  }
+});
