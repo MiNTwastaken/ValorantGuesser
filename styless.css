@@ -328,3 +328,186 @@ cursor: pointer;
 .read-more:hover {
   background-color: #0056b3; /* Darker blue on hover */
 }
+
+.create-post-container {
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px; /* Add spacing below the container */
+  text-align: left;
+}
+
+.create-post-container h2 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.create-post-container .form-group {
+  margin-bottom: 15px;
+}
+
+.create-post-container label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.create-post-container input[type="text"],
+.create-post-container textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.create-post-container textarea {
+  min-height: 150px; /* Make the textarea taller */
+}
+
+.create-post-btn {
+  background-color: #4CAF50; /* Green */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.create-post-btn:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+
+/* Login prompt styles */
+.login-prompt{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.login-prompt a{
+  color: #007bff; /* Blue */
+  text-decoration: none;
+}
+
+.login-prompt a:hover{
+  text-decoration: underline;
+}
+
+
+
+.admin-panel {
+  width: 80%; /* Adjust width as needed */
+  margin: 20px auto; /* Center the container */
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff; /* White background */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.admin-panel h2 {
+  color: #333; /* Dark gray for headings */
+  margin-bottom: 15px;
+}
+
+/* User List Styles */
+.user-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.user-box {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #f9f9f9; /* Light gray background */
+  width: 300px; /* Adjust width as needed */
+  text-align: center; /* Center content within the box */
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* Add spacing below the user info */
+}
+
+.user-picture {
+  width: 50px; /* Adjust size as needed */
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-details p {
+  margin: 5px 0; /* Add spacing between details */
+}
+
+.user-actions {
+  display: flex; /* Use flexbox to arrange buttons */
+  justify-content: center; /* Center the buttons */
+  gap: 10px; /* Spacing between buttons */
+}
+
+.make-admin-btn, .delete-btn, .show-data-btn{
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.make-admin-btn{
+  background-color: #007bff;
+}
+
+.make-admin-btn:hover{
+  background-color: #0056b3;
+}
+
+.delete-btn {
+  background-color: #dc3584; /* Red background for delete button */
+}
+.delete-btn:hover {
+  background-color: #821f4d; /* Red background for delete button */
+}
+
+.show-data-btn {
+  background-color: #46b64b; /* Darker green on hover */
+}
+.show-data-btn:hover {
+  background-color: #347b38; /* Darker green on hover */
+}
+
+.admin-panel form {
+  display: flex; /* Arrange elements horizontally */
+  align-items: center; /* Align vertically */
+  margin-bottom: 20px; /* Add some space below the form */
+}
+
+.admin-panel select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  font-size: 16px;
+  margin-right: 10px; /* Space between select and button */
+}
+
+.show-data-btn{
+  background-color: #4CAF50; /* Green */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease-in-out;
+}

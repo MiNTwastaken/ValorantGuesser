@@ -1,18 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Valorant Guesser Admin Panel</title>
-  <link rel="stylesheet" href="styless.css">
+    <title>Valorant Guesser Admin Panel</title>
+    <link rel="stylesheet" href="styless.css">
 </head>
 <body>
-  <?php
-  session_start();
+    <?php
+    session_start();
 
-  if (!isset($_SESSION["admin"]) || $_SESSION["admin"] !== 1) {
-    header("Location: login.php");
-  }
+    // Security Check
+    if (!isset($_SESSION["admin"]) || $_SESSION["admin"] !== 1) {
+        header("Location: login.php");
+        exit; 
+    }
 
-  ?>
+    // Database Connection
+    $connection = mysqli_connect("localhost:3306", "root", "", "valorantguesser");
+    if (!$connection) {
+        die("Connection failed: " . mysqli_connect_error());
+    }
+
+    // Handle User Management Actions
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_POST["make_admin"])) {
+            // ... (make admin logic) ...
+        } elseif (isset($_POST["delete_user"])) {
+            // ... (delete user logic) ...
+        }
+    }
+
+    // Fetch User Data for Display
+    $sql = "SELECT username, email, picture, favorite, lvl, exp, admin FROM user";
+    $result = mysqli_query($connection, $sql);
+
+    $users = [];
+    if (mysqli_num_rows($result) > 0) {
+        $users = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+    ?>
+
 <div class="navbar">
     <div class="container">
         <a href="index.php">Valorant Fanpage</a>
@@ -73,22 +99,53 @@
         </nav>
     </div>
 </div>
-  <h1>Valorant Guesser Admin Panel</h1>
-  <p>Welcome, <?php echo $_SESSION["username"];?>. Manage everything here</p>
+    <div class="admin-panel">
+    <h1>Valorant Guesser Admin Panel</h1>
+    <p>Welcome, <?php echo $_SESSION["username"];?>. Manage everything here</p>
 
-  <form method="post" action="show_data.php">
-    <select name="data_type">
-      <option value="ability">Abilities</option>
-      <option value="agent">Agents</option>
-      <option value="graffiti">Graffiti</option>
-      <option value="playercard">Player Cards</option>
-      <option value="quote">Quotes</option>
-      <option value="weapon">Weapons</option>
-    </select>
-    <button type="submit">Show Data</button>
-  </form>
+    <form method="post" action="show_data.php">
+        <select name="data_type">
+            <option value="ability">Abilities</option>
+            <option value="agent">Agents</option>
+            <option value="graffiti">Graffiti</option>
+            <option value="playercard">Player Cards</option>
+            <option value="quote">Quotes</option>
+            <option value="weapon">Weapons</option>
+        </select>
+        <button type="submit" class="show-data-btn">Show Data</button>
+    </form>
+        <h2>User Management</h2>
+        <div class="user-list">
+            <?php foreach ($users as $user) : ?>
+                <div class="user-box">
+                    <div class="user-info">
+                        <img src="<?php echo $user['picture']; ?>" alt="Profile Picture" class="user-picture">
+                        <div class="user-details">
+                            <p><strong>Username:</strong> <?php echo $user['username']; ?></p>
+                            <p><strong>Email:</strong> <?php echo $user['email']; ?></p>
+                            <p><strong>Favorite:</strong> <?php echo $user['favorite']; ?></p>
+                            <p><strong>Level:</strong> <?php echo $user['lvl']; ?></p>
+                            <p><strong>Experience:</strong> <?php echo $user['exp']; ?></p>
+                            <p><strong>Admin:</strong> <?php echo $user['admin'] ? 'Yes' : 'No'; ?></p>
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <?php if (!$user['admin']) : ?>
+                            <form method="post" action="">
+                                <input type="hidden" name="make_admin" value="<?php echo $user['username']; ?>">
+                                <button type="submit" class="make-admin-btn">Make Admin</button>
+                            </form>
+                        <?php endif; ?>
+                        <form method="post" action="">
+                            <input type="hidden" name="delete_user" value="<?php echo $user['username']; ?>">
+                            <button type="submit" class="delete-btn">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
 
-  <a href="login.php">Logout</a>
-
+    <script src="script.js"></script>
 </body>
 </html>

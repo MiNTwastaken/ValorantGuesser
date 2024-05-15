@@ -5,69 +5,73 @@
     <link rel="stylesheet" href="styless.css">
 </head>
 <body>
-    <div class="navbar">
-        <div class="container">
-            <a href="index.php">Valorant Fanpage</a>
-            <nav>
+<div class="navbar">
+    <div class="container">
+        <a href="index.php">Valorant Fanpage</a>
+        <nav>
+            <div class="dropdown">
+                <a href="wiki.php" class="dropdown-btn">Wiki</a>
+                <div class="dropdown-content">
+                    <a href="wiki.php#agents">Agents</a>
+                    <a href="wiki.php#weapons">Weapons</a>
+                    <a href="wiki.php#maps">Maps</a>
+                    <a href="wiki.php#strategies">Strategies</a>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <a href="forum.php" class="dropdown-btn">Forum</a>
+                <div class="dropdown-content">
+                    <a href="forum.php#general">General Discussion</a>
+                    <a href="forum.php#competitive">Competitive Play</a>
+                    <a href="forum.php#lore">Lore & Story</a>
+                    <a href="forum.php#creations">Community Creations</a>
+                </div>
+            </div>
+            
+            <div class="dropdown">
+                <a href="minigames.php" class="dropdown-btn">Minigames</a>
+                <div class="dropdown-content">
+                    <a href="minigames.php#daily">Daily Quiz</a>
+                    <a href="minigames.php#oneshot">One Shot</a>
+                    <a href="minigames.php#freeplay">Free Play</a>
+                </div>
+            </div>
+
+            <?php
+            session_start();
+            $isLoggedIn = isset($_SESSION["username"]);
+            ?>
+
+            <?php if ($isLoggedIn && isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) : ?>
                 <div class="dropdown">
-                    <a href="wiki.php" class="dropdown-btn">Wiki</a>
+                    <a href="admin.php" class="dropdown-btn">Admin Panel</a>
                     <div class="dropdown-content">
-                        <a href="wiki.php#agents">Agents</a>
-                        <a href="wiki.php#weapons">Weapons</a>
-                        <a href="wiki.php#maps">Maps</a>
-                        <a href="wiki.php#strategies">Strategies</a>
+                        <a href="admin.php#users">Manage Users</a> 
                     </div>
                 </div>
-                <div class="dropdown">
-                    <a href="forum.php" class="dropdown-btn">Forum</a>
-                    <div class="dropdown-content">
-                        <a href="forum.php#general">General Discussion</a>
-                        <a href="forum.php#competitive">Competitive Play</a>
-                        <a href="forum.php#lore">Lore & Story</a>
-                        <a href="forum.php#creations">Community Creations</a>
-                    </div>
+            <?php endif; ?>
+
+
+            <?php if ($isLoggedIn) : ?>
+                <div class="logged-in-user">
+                    <a href="profile.php" class="profile-link"><?php echo $_SESSION["username"]; ?></a>
+                    <form action="logout.php" method="post">
+                        <button type="submit">Logout</button>
+                    </form>
                 </div>
-                <div class="dropdown">
-                    <a href="minigames.php" class="dropdown-btn">Minigames</a>
-                    <div class="dropdown-content">
-                        <a href="minigames.php#daily">Daily Quiz</a>
-                        <a href="minigames.php#oneshot">One Shot</a>
-                        <a href="minigames.php#freeplay">Free Play</a>
-                    </div>
-                </div>
-
-                <?php
-                session_start();
-                $isLoggedIn = isset($_SESSION["username"]);
-                ?>
-
-                <?php if ($isLoggedIn && isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) : ?>
-                    <div class="dropdown">
-                        <a href="admin.php" class="dropdown-btn">Admin Panel</a>
-                        <div class="dropdown-content">
-                            <a href="admin.php#users">Manage Users</a> 
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-
-                <?php if ($isLoggedIn) : ?>
-                    <div class="logged-in-user">
-                        <a href="profile.php" class="profile-link"><?php echo $_SESSION["username"]; ?></a>
-                        <form action="logout.php" method="post">
-                            <button type="submit">Logout</button>
-                        </form>
-                    </div>
-                <?php else : ?>
-                    <a href="login.php" class="login-btn">Login</a>
-                <?php endif; ?>
-            </nav>
-        </div>
+            <?php else : ?>
+                <a href="login.php" class="login-btn">Login</a>
+            <?php endif; ?>
+        </nav>
     </div>
+</div>
 
     <div class="content">
 
         <?php
+        $isLoggedIn = isset($_SESSION["username"]);
+
         // Database Connection (replace with your connection details)
         $connection = mysqli_connect("localhost:3306", "root", "", "valorantguesser");
         if (!$connection) {
@@ -86,8 +90,30 @@
         }
 
         // Get all posts
-        $posts = getAllposts($connection);
+        $posts = getAllposts($connection); 
         ?>
+
+
+        <?php if ($isLoggedIn) : ?>
+            <div class="create-post-container">
+                <h2>Create a New Post</h2>
+                <form action="create_post.php" method="post">
+                    <div class="form-group">
+                        <label for="title">Post Title:</label>
+                        <input type="text" name="title" id="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Content:</label>
+                        <textarea name="content" id="content" required></textarea>
+                    </div>
+                    <button type="submit" class="create-post-btn">Create Post</button>
+                </form>
+            </div>
+        <?php else : ?>
+            <div class="login-prompt">
+                <p>To create posts, please <a href="login.php">log in</a> or <a href="register.php">register</a>.</p>
+            </div>
+        <?php endif; ?>
 
         <h2>Current posts</h2>
 
@@ -106,25 +132,14 @@
             <p>No posts created yet.</p>
         <?php endif; ?>
 
-        <?php if ($isLoggedIn) : ?>
-            <h2>Create a New Post</h2>
-            <form action="create_post.php" method="post">
-                <label for="title">Post Title:</label>
-                <input type="text" name="title" id="title" required>
-                <label for="content">Content:</label>
-                <textarea name="content" id="content" required></textarea>
-                <button type="submit">Create Post</button>
-            </form>
-
-        <?php else : ?>
-            <p>To create posts, please log in or register.</p>
-        <?php endif; ?>
-
         <?php
-        // Close database connection
-        mysqli_close($connection);
+        // Close database connection ONLY IF IT WAS SUCCESSFULLY ESTABLISHED
+        if ($connection) {
+            mysqli_close($connection);
+        }
         ?>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
