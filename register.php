@@ -37,10 +37,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["register"])) {
       $sql = "INSERT INTO user (username, password) VALUES ('$username', '$password')";
 
       if (mysqli_query($connection, $sql)) {
-        $registerSuccess = true;
-        echo "<h2>Registration successful!</h2>";
+        // Registration successful
+        header("Location: login.php"); // Redirect to login.php
+        exit; // Stop further execution of this script
       } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($connection);
+          echo "Error: " . $sql . "<br>" . mysqli_error($connection);
       }
     }
 
@@ -54,39 +55,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["register"])) {
   <title>Valorant Fanpage Registration</title>
   <link rel="stylesheet" href="styless.css">
 </head>
-<body></body>
+<body>
 
 <div class="navbar">
     <div class="container">
         <a href="index.php">Valorant Fanpage</a>
         <nav>
-            <a href="wiki.php" class="dropdown-btn">Wiki</a>
-            <div class="dropdown-content">
-                <a href="wiki.php#agents">Agents</a>
-                <a href="wiki.php#weapons">Weapons</a>
-                <a href="wiki.php#maps">Maps</a>
-                <a href="wiki.php#strategies">Strategies</a>
+            <div class="dropdown">
+                <a href="wiki.php" class="dropdown-btn">Wiki</a>
+                <div class="dropdown-content">
+                    <a href="wiki.php#agents">Agents</a>
+                    <a href="wiki.php#weapons">Weapons</a>
+                    <a href="wiki.php#maps">Maps</a>
+                    <a href="wiki.php#strategies">Strategies</a>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <a href="forum.php" class="dropdown-btn">Forum</a>
+                <div class="dropdown-content">
+                    <a href="forum.php#general">General Discussion</a>
+                    <a href="forum.php#competitive">Competitive Play</a>
+                    <a href="forum.php#lore">Lore & Story</a>
+                    <a href="forum.php#creations">Community Creations</a>
+                </div>
             </div>
             
-            <a href="forum.php" class="dropdown-btn">Forum</a>
-            <div class="dropdown-content">
-                <a href="forum.php#general">General Discussion</a>
-                <a href="forum.php#competitive">Competitive Play</a>
-                <a href="forum.php#lore">Lore & Story</a>
-                <a href="forum.php#creations">Community Creations</a>
-            </div>
-            
-            <a href="minigames.php" class="dropdown-btn">Minigames</a>
-            <div class="dropdown-content">
-                <a href="minigames.php#daily">Daily Quiz</a>
-                <a href="minigames.php#oneshot">One Shot</a>
-                <a href="minigames.php#freeplay">Free Play</a>
+            <div class="dropdown">
+                <a href="minigames.php" class="dropdown-btn">Minigames</a>
+                <div class="dropdown-content">
+                    <a href="minigames.php#daily">Daily Quiz</a>
+                    <a href="minigames.php#oneshot">One Shot</a>
+                    <a href="minigames.php#freeplay">Free Play</a>
+                </div>
             </div>
 
             <?php
             session_start();
             $isLoggedIn = isset($_SESSION["username"]);
             ?>
+
+            <?php if ($isLoggedIn && isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) : ?>
+                <div class="dropdown">
+                    <a href="admin.php" class="dropdown-btn">Admin Panel</a>
+                    <div class="dropdown-content">
+                        <a href="admin.php#users">Manage Users</a> 
+                    </div>
+                </div>
+            <?php endif; ?>
+
 
             <?php if ($isLoggedIn) : ?>
                 <div class="logged-in-user">
@@ -95,18 +112,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["register"])) {
                         <button type="submit">Logout</button>
                     </form>
                 </div>
-
-                <?php if (isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) : ?>
-                    <a href="admin.php" class="dropdown-btn">Admin Panel</a>
-                    <div class="dropdown-content">
-                        <a href="admin.php#users">Manage Users</a> 
-                    </div>
-                <?php endif; ?>
-
             <?php else : ?>
                 <a href="login.php" class="login-btn">Login</a>
             <?php endif; ?>
-
         </nav>
     </div>
 </div>

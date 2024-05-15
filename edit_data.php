@@ -2,9 +2,8 @@
 // Start session
 session_start();
 
-// Check if user is logged in as admin
-if (!isset($_SESSION["username"]) || $_SESSION["username"] != "admin") {
-  header("Location: login.php"); // Redirect to login if not admin
+if (!isset($_SESSION["admin"]) || $_SESSION["admin"] !== 1) {
+  header("Location: login.php");
   exit;
 }
 
@@ -87,7 +86,7 @@ mysqli_close($connection);
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Valorant Guesser Admin Panel - Edit <?php echo ucfirst($dataType); ?></title>
+  <title>Valorant Fanpage Admin Panel - Edit <?php echo ucfirst($dataType); ?></title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>

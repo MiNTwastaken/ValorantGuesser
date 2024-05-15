@@ -11,7 +11,7 @@
     // Security Check
     if (!isset($_SESSION["admin"]) || $_SESSION["admin"] !== 1) {
         header("Location: login.php");
-        exit; 
+        exit;
     }
 
     // Database Connection
@@ -20,13 +20,29 @@
         die("Connection failed: " . mysqli_connect_error());
     }
 
-    // Handle User Management Actions
+    // Handle User Management Actions and Set Session Messages
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_POST["make_admin"])) {
-            // ... (make admin logic) ...
+            $username = $_POST["make_admin"];
+            $sql = "UPDATE user SET admin = 1 WHERE username = '$username'";
+            if (mysqli_query($connection, $sql)) {
+                $_SESSION['success_message'] = "User '$username' has been made an admin.";
+            } else {
+                $_SESSION['error_message'] = "Error making user admin: " . mysqli_error($connection);
+            }
         } elseif (isset($_POST["delete_user"])) {
-            // ... (delete user logic) ...
+            $username = $_POST["delete_user"];
+            $sql = "DELETE FROM user WHERE username = '$username'";
+            if (mysqli_query($connection, $sql)) {
+                $_SESSION['success_message'] = "User '$username' has been deleted.";
+            } else {
+                $_SESSION['error_message'] = "Error deleting user: " . mysqli_error($connection);
+            }
         }
+
+        // Redirect to avoid duplicate messages on refresh
+        header("Location: admin.php");
+        exit;
     }
 
     // Fetch User Data for Display
@@ -38,7 +54,6 @@
         $users = mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
     ?>
-
 <div class="navbar">
     <div class="container">
         <a href="index.php">Valorant Fanpage</a>
@@ -100,20 +115,34 @@
     </div>
 </div>
     <div class="admin-panel">
-    <h1>Valorant Guesser Admin Panel</h1>
-    <p>Welcome, <?php echo $_SESSION["username"];?>. Manage everything here</p>
+        <h1>Valorant Guesser Admin Panel</h1>
+        <p>Welcome, <?php echo $_SESSION["username"]; ?>. Manage everything here</p>
 
-    <form method="post" action="show_data.php">
-        <select name="data_type">
-            <option value="ability">Abilities</option>
-            <option value="agent">Agents</option>
-            <option value="graffiti">Graffiti</option>
-            <option value="playercard">Player Cards</option>
-            <option value="quote">Quotes</option>
-            <option value="weapon">Weapons</option>
-        </select>
-        <button type="submit" class="show-data-btn">Show Data</button>
-    </form>
+        <?php 
+        // Display session messages
+        if (isset($_SESSION['success_message'])) {
+            echo '<div class="success-message">' . $_SESSION['success_message'] . '</div>';
+            unset($_SESSION['success_message']); // Clear the message
+        }
+
+        if (isset($_SESSION['error_message'])) {
+            echo '<div class="error-message">' . $_SESSION['error_message'] . '</div>';
+            unset($_SESSION['error_message']); // Clear the message
+        }
+        ?>
+
+        <form method="post" action="show_data.php">
+            <select name="data_type">
+                <option value="ability">Abilities</option>
+                <option value="agent">Agents</option>
+                <option value="graffiti">Graffiti</option>
+                <option value="playercard">Player Cards</option>
+                <option value="quote">Quotes</option>
+                <option value="weapon">Weapons</option>
+            </select>
+            <button type="submit" class="show-data-btn">Show Data</button>
+        </form>
+
         <h2>User Management</h2>
         <div class="user-list">
             <?php foreach ($users as $user) : ?>
@@ -131,12 +160,12 @@
                     </div>
                     <div class="user-actions">
                         <?php if (!$user['admin']) : ?>
-                            <form method="post" action="">
+                            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                                 <input type="hidden" name="make_admin" value="<?php echo $user['username']; ?>">
                                 <button type="submit" class="make-admin-btn">Make Admin</button>
                             </form>
                         <?php endif; ?>
-                        <form method="post" action="">
+                        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                             <input type="hidden" name="delete_user" value="<?php echo $user['username']; ?>">
                             <button type="submit" class="delete-btn">Delete</button>
                         </form>
@@ -145,7 +174,18 @@
             <?php endforeach; ?>
         </div>
     </div>
-
+    <script>
+    <?php 
+    if (isset($_SESSION['success_message']) || isset($_SESSION['error_message'])) {
+        if (isset($_SESSION['success_message'])) {
+            $message = $_SESSION['success_message'];
+        } else {
+            $message = $_SESSION['error_message'];
+        }
+        echo "alert('$message');";
+    }
+    ?>
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
