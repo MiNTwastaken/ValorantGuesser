@@ -62,7 +62,7 @@ if (mysqli_num_rows($result) > 0) {
       $mail->Host       = 'smtp.gmail.com';                    
       $mail->SMTPAuth   = true;
       $mail->Username   = 'valorantforumnoreply@gmail.com';
-      $mail->Password   = 'uihw cbhk trjb ngos';
+      $mail->Password   = 'nu uh github';
       $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
       $mail->Port       = 465;
 
