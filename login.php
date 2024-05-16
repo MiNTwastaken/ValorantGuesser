@@ -2,7 +2,7 @@
 // Initialize variables
 $usernameErr = "";
 $passwordErr = "";
-$registerSuccess = false; // Flag for successful registration
+$activationRequired = false;  // New flag for activation message
 
 // Process login form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -28,36 +28,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       die("Connection failed: " . mysqli_connect_error());
     }
 
-    $sql = "SELECT * FROM user WHERE username = '$username'";
-    $result = mysqli_query($connection, $sql);
+      // Prepare and execute statement to prevent SQL injection
+      $stmt = mysqli_prepare($connection, "SELECT * FROM user WHERE username = ?");
+      mysqli_stmt_bind_param($stmt, "s", $username);
+      mysqli_stmt_execute($stmt);
+      $result = mysqli_stmt_get_result($stmt);
+      
+      if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        if (password_verify($password, $row['password'])) {
+          if ($row['email_confirmed'] == 1) { // Check if email is confirmed
+            // Login successful, proceed
+            $loginSuccess = true;
+            session_start();
+            $_SESSION["username"] = $username;
 
-    if (mysqli_num_rows($result) > 0) {
-      $row = mysqli_fetch_assoc($result);
-      if (password_verify($password, $row['password'])) {
-        // Password is valid, login successful
-
-        $loginSuccess = true;
-        session_start();
-        $_SESSION["username"] = $username;
-
-        if ($row["admin"] == 1) {
-          $_SESSION["admin"] = 1;
-          header("Location: admin.php"); // Redirect to admin panel if admin
+            if ($row["admin"] == 1) {
+                $_SESSION["admin"] = 1;
+                header("Location: admin.php"); // Redirect to admin panel
+            } else {
+                $_SESSION["admin"] = 0;
+                header("Location: index.php"); 
+            }
+            exit;
+            } else {
+              // Email not confirmed, set flag
+              $activationRequired = true;
+            }
         } else {
-          $_SESSION["admin"] = 0;
-          header("Location: index.php"); // Redirect to non-admin page otherwise
+          $passwordErr = "Invalid username or password";
         }
-
-        exit;
-      } else {
-        $passwordErr = "Invalid password";
-      }
     } else {
-      $usernameErr = "Invalid username";
+      $usernameErr = "Invalid username or password";
     }
+      
+// Close the statement and connection
+mysqli_stmt_close($stmt);
+mysqli_close($connection);
 
-    // Close the connection
-    mysqli_close($connection);
   }
 }
 ?>
@@ -147,6 +155,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <input type="password" name="password" id="password">
       <span class="error">* <?php echo $passwordErr; ?></span>
     </div>
+
+    <?php if ($activationRequired): ?>
+      <div class="error">* Please check your email for account activation.</div>
+    <?php endif; ?>
 
     <div class="form-group">
       <button type="submit" name="login">Login</button>

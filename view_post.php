@@ -13,7 +13,7 @@
   // Check if user is logged in
   $isLoggedIn = isset($_SESSION["username"]);
 
-  // Database Connection (replace with your connection details)
+  // Database Connection
   $connection = mysqli_connect("localhost:3306", "root", "", "valorantguesser");
   if (!$connection) {
     die("Connection failed: " . mysqli_connect_error());
