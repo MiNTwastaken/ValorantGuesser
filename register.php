@@ -58,13 +58,13 @@ if (mysqli_num_rows($result) > 0) {
     try {
       // Server settings
       $mail->SMTPDebug = 0; 
-      $mail->isSMTP();                                            
+      $mail->isSMTP();
       $mail->Host       = 'smtp.gmail.com';                    
-      $mail->SMTPAuth   = true;                                   
-      $mail->Username   = 'valorantforumnoreply@gmail.com';                     
-      $mail->Password   = 'nuh uh github';                       
-      $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            
-      $mail->Port       = 465;                                    
+      $mail->SMTPAuth   = true;
+      $mail->Username   = 'valorantforumnoreply@gmail.com';
+      $mail->Password   = 'uihw cbhk trjb ngos';
+      $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+      $mail->Port       = 465;
 
       // Recipients
       $mail->setFrom('valorantforumnoreply@gmail.com', 'Valorant Fanpage');

@@ -401,7 +401,7 @@ cursor: pointer;
 
 
 .admin-panel {
-  width: 80%; /* Adjust width as needed */
+  width: 80%;
   margin: 20px auto; /* Center the container */
   padding: 20px;
   border: 1px solid #ddd;
@@ -428,8 +428,8 @@ cursor: pointer;
   border-radius: 8px;
   padding: 15px;
   background-color: #f9f9f9; /* Light gray background */
-  width: 300px; /* Adjust width as needed */
-  text-align: center; /* Center content within the box */
+  width: 300px;
+  text-align: center;
 }
 
 .user-info {
@@ -451,7 +451,7 @@ cursor: pointer;
 
 .user-actions {
   display: flex; /* Use flexbox to arrange buttons */
-  justify-content: center; /* Center the buttons */
+  justify-content: center;
   gap: 10px; /* Spacing between buttons */
 }
 
@@ -510,4 +510,33 @@ cursor: pointer;
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.2s ease-in-out;
+}
+
+
+.item {
+  border: 1px solid #ddd;
+  padding: 15px;
+  background-color: #fff; /* White background for items */
+  border-radius: 8px; /* Slightly rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  text-align: center;  
+  width: 250px;
+  min-height: 350px; /* Adjust the height as needed */
+}
+
+.item h3 {
+  margin-top: 0; /* Remove default top margin */
+  color: #333;
+}
+
+.item p, .item li {
+  text-align: left;
+}
+
+/* Image Styling */
+.item img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+  border-radius: 8px; /* Match the container's rounded corners */
 }

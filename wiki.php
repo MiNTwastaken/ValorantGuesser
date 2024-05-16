@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Valorant Wiki</title>
-  <link rel="stylesheet" href="styless.css">
+    <title>Valorant Wiki</title>
+    <link rel="stylesheet" href="styless.css">
 </head>
 <body>
+
 <div class="navbar">
     <div class="container">
         <a href="index.php">Valorant Fanpage</a>
@@ -67,34 +68,121 @@
     </div>
 </div>
 
-  <div class="content">
-    <h1>Valorant Wiki</h1>
 
+<div class="content">
+    <h1>Valorant Wiki</h1>
     <p>Welcome to the Valorant Wiki! Here you'll find comprehensive information about the game.</p>
 
     <h2>Agents</h2>
-    <div id="agents-container">
-      </div>
+    <div id="agents-container" class="container"></div>
 
     <h2>Weapons</h2>
-    <div id="weapons-container">
-      </div>
+    <div id="weapons-container" class="container"></div>
 
     <h2>Maps</h2>
-    <div id="maps-container">
-      </div>
+    <div id="maps-container" class="container"></div>
+</div>
 
-    <h2>Strategies</h2>
-    <p>This section will cover various strategies for different aspects of the game, including:</p>
-    <ul>
-      <li>Attack and Defense Strategies</li>
-      <li>Agent Compositions</li>
-      <li>Economy Management</li>
-      <li>Aiming Techniques</li>
-    </ul>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
 
-    </div>
+        // Function to create and display an item (agent, weapon, map)
+        function createItem(item, type) {
+            const itemDiv = document.createElement("div");
+            itemDiv.classList.add("item", type);
 
-  <script src="script.js"></script>
+            const itemName = document.createElement("h3");
+            itemName.textContent = item.displayName;
+            itemDiv.appendChild(itemName);
+
+            const itemImage = document.createElement("img");
+            itemImage.src = item.displayIcon;
+            itemDiv.appendChild(itemImage);
+
+            const itemDescription = document.createElement("p");
+            itemDescription.textContent = item.description || item.tacticalDescription || "No description available";
+            itemDiv.appendChild(itemDescription);
+
+            return itemDiv;
+        }
+    
+
+        // Function to fetch and display items of a specific type
+        function fetchAndDisplayItems(url, containerId, type) {
+            const container = document.getElementById(containerId);
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    data.data.forEach(item => {
+                        if (type === 'agent' && !item.isPlayableCharacter) return;
+                        const itemDiv = createItem(item, type);
+
+                        // Display additional information based on item type
+                        if (type === "agent") {
+                            const agentRole = document.createElement("p");
+                            agentRole.textContent = `Role: ${item.role.displayName}`;
+                            itemDiv.appendChild(agentRole);
+
+                            // Add abilities list for agents
+                            const abilitiesList = document.createElement("ul");
+                            item.abilities.forEach(ability => {
+                                const abilityItem = document.createElement("li");
+                                abilityItem.textContent = `${ability.displayName}: ${ability.description}`;
+                                abilitiesList.appendChild(abilityItem);
+                            });
+                            itemDiv.appendChild(abilitiesList);
+                        } else if (type === "weapon") {
+                            // Handle weapon stats, checking if they exist
+                            if (item.weaponStats) {
+                                const weaponStats = document.createElement("ul");
+                                weaponStats.innerHTML = `
+                                    <li>Fire Rate: ${item.weaponStats.fireRate}</li>
+                                    <li>Magazine Size: ${item.weaponStats.magazineSize}</li>
+                                    <li>Cost: ${item.shopData?.cost ?? "N/A"}</li>
+                                `;
+                                itemDiv.appendChild(weaponStats);
+                            } else {
+                                const noStatsMessage = document.createElement("p");
+                                noStatsMessage.textContent = "Weapon stats not available.";
+                                itemDiv.appendChild(noStatsMessage);
+                            }
+                        } else if (type === "map") {
+                            // Display map callouts
+                            if (item.callouts) {
+                                const calloutsList = document.createElement("ul");
+                                calloutsList.classList.add("callouts"); // Add a class for callouts styling
+                                item.callouts.forEach(callout => {
+                                    const calloutItem = document.createElement("li");
+                                    calloutItem.textContent = `${callout.regionName} (${callout.superRegionName})`;
+                                    calloutsList.appendChild(calloutItem);
+                                });
+                                itemDiv.appendChild(calloutsList);
+                            }
+                        }
+
+                        container.appendChild(itemDiv);
+                    });
+                })
+                .catch(error => {
+                    container.innerHTML = "<p>Error fetching data: " + error.message + "</p>"; 
+                    console.error('Fetch Error:', error);
+                });
+        }
+
+        // Fetch and display agents
+        fetchAndDisplayItems('https://valorant-api.com/v1/agents', 'agents-container', 'agent');
+
+        // Fetch and display weapons
+        fetchAndDisplayItems('https://valorant-api.com/v1/weapons', 'weapons-container', 'weapon');
+
+        // Fetch and display maps
+        fetchAndDisplayItems('https://valorant-api.com/v1/maps', 'maps-container', 'map');
+    });
+</script>
 </body>
 </html>
