@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 15, 2024 at 09:50 PM
+-- Generation Time: May 16, 2024 at 05:27 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -199,8 +199,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`username`, `password`, `email`, `email_confirmed`, `picture`, `favorite`, `tries`, `admin`, `lvl`, `exp`, `current_table`, `winner`, `joined_at`) VALUES
-('JoeShmoe', '$2y$10$9S0eK4j9aHE4uBHpGlsLyeOUrfxMvfysj3mrlSZjigNPMthFfRLs.', '', 0, '/ValorantGuesser/img/profile/UnknownAgent.png', 'Classified', 0, 0, 0, 0, 0, 0, '2024-05-15 22:15:25'),
-('OGadmin', '$2y$10$LcchI22A9E5DPQeAJVayzOQFErncwOt.W.CoajNFyppSzggO2VVRe', 'TheAdminHimself@gmail.com', 0, '/ValorantGuesser/img/profile/UnknownAgent.png', 'Classified', 0, 1, 999, 9999, 0, 0, '2024-05-01 10:42:34');
+('LuckyB', '$2y$10$j3CtXotoWYjMfDr5JAOmz.6JEqIc4GYjDTuAm/FsHUEi5f.r8sf9K', 'luckybet116@gmail.com', 1, '/ValorantGuesser/img/profile/UnknownAgent.png', 'Classified', 0, 0, 0, 0, 0, 0, '2024-05-16 17:40:20'),
+('OGadmin', '$2y$10$LcchI22A9E5DPQeAJVayzOQFErncwOt.W.CoajNFyppSzggO2VVRe', 'TheAdminHimself@gmail.com', 1, '/ValorantGuesser/img/profile/UnknownAgent.png', 'Classified', 0, 1, 999, 9999, 0, 0, '2024-05-01 10:42:34');
 
 -- --------------------------------------------------------
 
