@@ -9,7 +9,7 @@ $usernameErr = $passwordErr = $emailErr = "";
 $username = $password = $email = "";
 
 // Database Connection
-$connection = mysqli_connect("localhost:3306", "root", "", "valorantguesser");
+$connection = mysqli_connect("localhost:3306", "root", "", "valorantfanpage");
 if (!$connection) {
   die("Connection failed: " . mysqli_connect_error());
 }
@@ -62,7 +62,7 @@ if (mysqli_num_rows($result) > 0) {
       $mail->Host       = 'smtp.gmail.com';                    
       $mail->SMTPAuth   = true;
       $mail->Username   = 'valorantforumnoreply@gmail.com';
-      $mail->Password   = 'nu uh github';
+      $mail->Password   = 'uihw cbhk trjb ngos';
       $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
       $mail->Port       = 465;
 
@@ -71,7 +71,7 @@ if (mysqli_num_rows($result) > 0) {
       $mail->addAddress($email, $username);
 
       // Content
-      $confirmationLink = "http://localhost/ValorantGuesser/register_confirm.php?email=" . urlencode($email);
+      $confirmationLink = "http://localhost/valorantfanpage/register_confirm.php?email=" . urlencode($email);
 
       $mail->isHTML(true);                                  
       $mail->Subject = 'Confirm your registration';
@@ -105,96 +105,105 @@ mysqli_close($connection);
 <link rel="stylesheet" href="styless.css">
 </head>
 <body>
+<script src="script.js"></script>
+  <div class="background-video">
+    <video autoplay muted loop>
+      <source src="content/illustration.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
-<div class="navbar">
-  <div class="container">
-      <a href="index.php">Valorant Fanpage</a>
-      <nav>
-          <div class="dropdown">
-              <a href="wiki.php" class="dropdown-btn">Wiki</a>
-              <div class="dropdown-content">
-                  <a href="wiki.php#agents">Agents</a>
-                  <a href="wiki.php#weapons">Weapons</a>
-                  <a href="wiki.php#maps">Maps</a>
-                  <a href="wiki.php#strategies">Strategies</a>
-              </div>
-          </div>
-
-          <div class="dropdown">
-              <a href="forum.php" class="dropdown-btn">Forum</a>
-              <div class="dropdown-content">
-                  <a href="forum.php#general">General Discussion</a>
-                  <a href="forum.php#competitive">Competitive Play</a>
-                  <a href="forum.php#lore">Lore & Story</a>
-                  <a href="forum.php#creations">Community Creations</a>
-              </div>
-          </div>
-          
-          <div class="dropdown">
-              <a href="minigames.php" class="dropdown-btn">Minigames</a>
-              <div class="dropdown-content">
-                  <a href="minigames.php#daily">Daily Quiz</a>
-                  <a href="minigames.php#oneshot">One Shot</a>
-                  <a href="minigames.php#freeplay">Free Play</a>
-              </div>
-          </div>
-
-          <?php
-          session_start();
-          $isLoggedIn = isset($_SESSION["username"]);
-          ?>
-
-          <?php if ($isLoggedIn && isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) : ?>
+  <div class="navbar">
+      <div class="container">
+          <a href="index.php">Valorant Fanpage</a>
+          <nav>
               <div class="dropdown">
-                  <a href="admin.php" class="dropdown-btn">Admin Panel</a>
+                  <a href="wiki.php" class="dropdown-btn">Wiki</a>
                   <div class="dropdown-content">
-                      <a href="admin.php#users">Manage Users</a> 
+                      <a href="wiki.php#agents">Agents</a>
+                      <a href="wiki.php#weapons">Weapons</a>
+                      <a href="wiki.php#maps">Maps</a>
+                      <a href="wiki.php#skins">Skins</a>
                   </div>
               </div>
-          <?php endif; ?>
 
-
-          <?php if ($isLoggedIn) : ?>
-              <div class="logged-in-user">
-                  <a href="profile.php" class="profile-link"><?php echo $_SESSION["username"]; ?></a>
-                  <form action="logout.php" method="post">
-                      <button type="submit">Logout</button>
-                  </form>
+              <div class="dropdown">
+                  <a href="social.php" class="dropdown-btn">Social</a>
+                  <div class="dropdown-content">
+                      <a href="social.php#general">General Discussion</a>
+                      <a href="social.php#competitive">Competitive Play</a>
+                      <a href="social.php#lore">Lore & Story</a>
+                      <a href="social.php#creations">Community Creations</a>
+                  </div>
               </div>
-          <?php else : ?>
-              <a href="login.php" class="login-btn">Login</a>
-          <?php endif; ?>
-      </nav>
+              
+              <div class="dropdown">
+                  <a href="minigames.php" class="dropdown-btn">Minigames</a>
+                  <div class="dropdown-content">
+                      <a href="dailychallenge.php">Daily Quiz</a>
+                      <a href="aimtrainer.php">One Shot</a>
+                      <a href="freeplay.php">Free Play</a>
+                      <a href="leaderboard.php">Leaderboard</a>
+                  </div>
+              </div>
+
+              <?php
+              session_start();
+              $isLoggedIn = isset($_SESSION["username"]);
+              ?>
+
+              <?php if ($isLoggedIn && isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) : ?>
+                  <div class="dropdown">
+                      <a href="admin.php" class="dropdown-btn">Admin Panel</a>
+                      <div class="dropdown-content">
+                          <a href="admin.php">Manage Users</a>
+                          <a href="gamedata.php">Manage Game Data</a>
+                          <a href="posts.php">Manage Posts</a>
+                      </div>
+                  </div>
+              <?php endif; ?>
+
+
+              <?php if ($isLoggedIn) : ?>
+                  <div class="logged-in-user">
+                      <a href="profile.php" class="profile-link"><?php echo $_SESSION["username"]; ?></a>
+                      <form action="logout.php" method="post">
+                          <button type="submit">Logout</button>
+                      </form>
+                  </div>
+              <?php else : ?>
+                  <a href="login.php" class="login-btn">Login</a>
+              <?php endif; ?>
+          </nav>
+      </div>
   </div>
-</div>
 
-<div class="logreg-container register-page">
-  <h2>Valorant Fanpage Register</h2>
-  
-  <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-      <div class="form-group">
-          <label for="username">Username:</label>
-          <input type="text" name="username" id="username" value="<?php echo isset($_POST["username"]) ? $_POST["username"] : ""; ?>" required>
-          <span class="error">* <?php echo $usernameErr; ?></span>
-      </div>
-  
-      <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" name="email" id="email" value="<?php echo isset($_POST["email"]) ? $_POST["email"] : ""; ?>" required>
-          <span class="error">* <?php echo $emailErr; ?></span>
-      </div>
+  <div class="logreg-container register-page">
+    <h2>Valorant Fanpage Register</h2>
+    
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" value="<?php echo isset($_POST["username"]) ? $_POST["username"] : ""; ?>" required>
+            <span class="error">* <?php echo $usernameErr; ?></span>
+        </div>
+    
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" value="<?php echo isset($_POST["email"]) ? $_POST["email"] : ""; ?>" required>
+            <span class="error">* <?php echo $emailErr; ?></span>
+        </div>
 
-      <div class="form-group">
-          <label for="password">Password:</label>
-          <input type="password" name="password" id="password" required>
-          <span class="error">* <?php echo $passwordErr; ?></span>
-      </div>
-  
-      <div class="form-group">
-          <button type="submit" class="register-btn" name="register">Register</button>
-      </div>
-  </form>
-</div>
-<script src="script.js"></script>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+            <span class="error">* <?php echo $passwordErr; ?></span>
+        </div>
+    
+        <div class="form-group">
+            <button type="submit" class="register-btn" name="register">Register</button>
+        </div>
+    </form>
+  </div>
 </body>
 </html>

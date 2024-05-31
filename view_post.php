@@ -1,118 +1,229 @@
+<?php
+session_start();
+
+// Database connection
+$connection = mysqli_connect("localhost:3306", "root", "", "valorantfanpage");
+
+// Check connection
+if (!$connection) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+// Get post ID from query string
+if (isset($_GET['id'])) {
+    $postId = $_GET['id'];
+
+    // Fetch post details from the database
+    $stmt = mysqli_prepare($connection, "SELECT * FROM posts WHERE id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $postId);
+    mysqli_stmt_execute($stmt);
+    $postResult = mysqli_stmt_get_result($stmt);
+
+    if ($postRow = mysqli_fetch_assoc($postResult)) {
+        $postTitle = $postRow['title'];
+        $postContent = $postRow['content'];
+        $createdBy = $postRow['created_by'];
+        $createdAt = $postRow['created_at'];
+    } else {
+        // Handle case where post doesn't exist
+        echo "Post not found.";
+        exit();
+    }
+    // Fetch media files for the post
+    $mediaFiles = [];
+    $stmt = mysqli_prepare($connection, "SELECT media FROM posts WHERE id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $postId);
+    mysqli_stmt_execute($stmt);
+    $mediaResult = mysqli_stmt_get_result($stmt);
+    if ($mediaRow = mysqli_fetch_assoc($mediaResult)) {
+        $mediaFiles = explode(',', $mediaRow['media']);
+    }
+
+    // Fetch comments for the post
+    $stmt = mysqli_prepare($connection, "SELECT * FROM comments WHERE post_id = ? ORDER BY created_at DESC");
+    mysqli_stmt_bind_param($stmt, "i", $postId);
+    mysqli_stmt_execute($stmt);
+    $commentsResult = mysqli_stmt_get_result($stmt);
+
+    $comments = mysqli_fetch_all($commentsResult, MYSQLI_ASSOC);
+
+    mysqli_stmt_close($stmt); // Close prepared statement for fetching
+} else {
+    // Handle case where no post ID is provided
+    echo "Invalid request.";
+    exit();
+}
+
+// Handle comment submission (only if user is logged in)
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION["username"])) {
+    $commentText = htmlspecialchars($_POST["comment_text"]);
+
+    if (!empty($commentText)) {
+        // Insert comment into database
+        $stmt = mysqli_prepare($connection, "INSERT INTO comments (post_id, commenter, comment_text) VALUES (?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "iss", $postId, $_SESSION["username"], $commentText);
+        if (mysqli_stmt_execute($stmt)) {
+            // Refresh the page to show the new comment
+            header("Location: view_post.php?id=$postId");
+            exit();
+        } else {
+            echo "Error inserting comment: " . mysqli_error($connection);
+        }
+        mysqli_stmt_close($stmt); // Close prepared statement for inserting comment
+    }
+}
+
+// Close the connection
+mysqli_close($connection);
+?>
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Valorant Forum - Post Details</title>
-  <link rel="stylesheet" href="styles.css">
+    <title>View Post</title>
+    <link rel="stylesheet" href="styless.css"> 
 </head>
 <body>
+<script src="script.js"></script>
+<div class="background-video">
+        <video autoplay muted loop>
+            <source src="content/illustration.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+<div class="navbar">
+    <div class="container">
+        <a href="index.php">Valorant Fanpage</a>
+        <nav>
+            <div class="dropdown">
+                <a href="wiki.php" class="dropdown-btn">Wiki</a>
+                <div class="dropdown-content">
+                    <a href="wiki.php#agents">Agents</a>
+                    <a href="wiki.php#weapons">Weapons</a>
+                    <a href="wiki.php#maps">Maps</a>
+                    <a href="wiki.php#skins">Skins</a>
+                </div>
+            </div>
 
-  <?php
-  // Start session (if not already started)
-  session_start();
+            <div class="dropdown">
+                <a href="social.php" class="dropdown-btn">Social</a>
+                <div class="dropdown-content">
+                    <a href="social.php#general">General Discussion</a>
+                    <a href="social.php#competitive">Competitive Play</a>
+                    <a href="social.php#lore">Lore & Story</a>
+                    <a href="social.php#creations">Community Creations</a>
+                </div>
+            </div>
+            
+            <div class="dropdown">
+                <a href="minigames.php" class="dropdown-btn">Minigames</a>
+                <div class="dropdown-content">
+                    <a href="dailychallenge.php">Daily Quiz</a>
+                    <a href="aimtrainer.php">One Shot</a>
+                    <a href="freeplay.php">Free Play</a>
+                    <a href="leaderboard.php">Leaderboard</a>
+                </div>
+            </div>
+            <?php
+            $isLoggedIn = isset($_SESSION["username"]);
+            ?>
 
-  // Check if user is logged in
-  $isLoggedIn = isset($_SESSION["username"]);
+            <?php if ($isLoggedIn && isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) : ?>
+                <div class="dropdown">
+                    <a href="admin.php" class="dropdown-btn">Admin Panel</a>
+                    <div class="dropdown-content">
+                        <a href="admin.php">Manage Users</a>
+                        <a href="gamedata.php">Manage Game Data</a>
+                        <a href="posts.php">Manage Posts</a>
+                    </div>
+                </div>
+            <?php endif; ?>
 
-  // Database Connection
-  $connection = mysqli_connect("localhost:3306", "root", "", "valorantguesser");
-  if (!$connection) {
-    die("Connection failed: " . mysqli_connect_error());
-  }
 
-  // Get post ID from URL parameter
-  $postId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+            <?php if ($isLoggedIn) : ?>
+                <div class="logged-in-user">
+                    <a href="profile.php" class="profile-link"><?php echo $_SESSION["username"]; ?></a>
+                    <form action="logout.php" method="post">
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>
+            <?php else : ?>
+                <a href="login.php" class="login-btn">Login</a>
+            <?php endif; ?>
+        </nav>
+    </div>
+</div>
+        <div class="content">
+            <h2><?php echo $postTitle; ?></h2>
+            <p><?php echo $postContent; ?></p>
 
-  // Check if post ID is valid
-  if (!$postId) {
-    echo "Invalid post ID.";
-    exit;
-  }
+            <?php if (!empty($mediaFiles)): ?> 
+                <div class="post-media" data-current-media-index="0">
+                <?php foreach ($mediaFiles as $index => $mediaFile) : ?>
+                    <?php
+                        $filePath = "content/" . $mediaFile;
+                        $fileType = mime_content_type($filePath);
+                        $display = ($index === 0) ? 'block' : 'none'; 
+                    ?>
+                    <div class="media-item" style="display: <?= $display ?>;">
+                        <?php if (strpos($fileType, 'image/') === 0) : ?>
+                            <img src="<?= $filePath ?>" alt="Post Media" class="file-preview">
+                        <?php elseif (strpos($fileType, 'video/') === 0) : ?>
+                            <video src="<?= $filePath ?>" controls class="file-preview"></video>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+                    
+                    <div class="media-controls" style="display: <?php echo (count($mediaFiles) > 1) ? 'flex' : 'none'; ?>;">
+                        <button class="media-prev" onclick="showPrevMedia(<?php echo $postId; ?>)">&lt;</button>
+                        <button class="media-next" onclick="showNextMedia(<?php echo $postId; ?>)">&gt;</button>
+                    </div>
+                </div>
+            <?php endif; ?>
 
-  // Function to get post details by ID
-  function getpostDetails($connection, $postId) {
-    $sql = "SELECT * FROM posts WHERE id = $postId";
-    $result = mysqli_query($connection, $sql);
-    if (mysqli_num_rows($result) == 1) {
-      return mysqli_fetch_assoc($result);
-    } else {
-      return false;
-    }
-  }
 
-  // Get post details
-  $post = getpostDetails($connection, $postId);
+            <h3>Comments</h3>
 
-  // Check if post exists
-  if (!$post) {
-    echo "post not found.";
-    exit;
-  }
+            <?php if (isset($_SESSION["username"])): ?>
+                <form action="" method="post">
+                    <textarea name="comment_text" placeholder="Write your comment..."></textarea>
+                    <button type="submit">Submit Comment</button>
+                </form>
+            <?php else: ?>
+                <p>You need to be logged in to comment.</p>
+            <?php endif; ?>
+            <ul class="comment-list">
+                <?php foreach ($comments as $comment): ?>
+                    <li>
+                        <strong><?php echo $comment['commenter']; ?></strong> (<?php echo $comment['created_at']; ?>):
+                        <p><?php echo $comment['comment_text']; ?></p>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <script>
+        // Show Previous Media Function
+        function showPrevMedia(postId) {
+            const postMediaDiv = document.querySelector(`.post-media[data-current-media-index]`); // Select by the data attribute
+            let currentMediaIndex = parseInt(postMediaDiv.dataset.currentMediaIndex);
+            const mediaItems = postMediaDiv.querySelectorAll('.media-item'); 
 
-  // Function to get comments for a post
-  function getComments($connection, $postId) {
-    $sql = "SELECT c.content, c.created_at, u.username FROM comments c JOIN users u ON c.user_id = u.id WHERE c.post_id = $postId ORDER BY c.created_at ASC";
-    $result = mysqli_query($connection, $sql);
-    if (mysqli_num_rows($result) > 0) {
-      return mysqli_fetch_all($result, MYSQLI_ASSOC);
-    } else {
-      return false;
-    }
-  }
+            mediaItems[currentMediaIndex].style.display = 'none';
+            currentMediaIndex = (currentMediaIndex - 1 + mediaItems.length) % mediaItems.length;
+            postMediaDiv.dataset.currentMediaIndex = currentMediaIndex;
+            mediaItems[currentMediaIndex].style.display = 'block';
+        }
 
-  // Get comments for this post
-  $comments = getComments($connection, $postId);
-  ?>
+        // Show Next Media Function
+        function showNextMedia(postId) {
+            const postMediaDiv = document.querySelector(`.post-media[data-current-media-index]`); // Select by the data attribute
+            let currentMediaIndex = parseInt(postMediaDiv.dataset.currentMediaIndex);
+            const mediaItems = postMediaDiv.querySelectorAll('.media-item'); 
 
-  <h1><?php echo $post['title']; ?></h1>
-
-  <p>Created by: <?php echo $post['created_by']; ?></p>
-  <p><?php echo $post['content']; ?></p>
-
-  <?php
-  // Check if user is post owner (compare usernames from session and post)
-  $ispostOwner = $isLoggedIn && $post['created_by'] == $_SESSION["username"];
-  ?>
-
-  <?php if ($ispostOwner) : ?>
-    <h2>Edit post</h2>
-    <form action="edit_post.php" method="post">
-      <input type="hidden" name="id" value="<?php echo $post['id']; ?>">  <label for="title">post Title:</label>
-      <input type="text" name="title" id="title" value="<?php echo $post['title']; ?>" required>
-      <label for="content">Content:</label>
-      <textarea name="content" id="content" required><?php echo $post['content']; ?></textarea>
-      <button type="submit">Save Changes</button>
-    </form>
-  <?php endif; ?>
-
-  <h2>Comments</h2>
-
-  <?php if ($comments) : ?>
-    <ul>
-      <?php foreach ($comments as $comment) : ?>
-        <li>
-          <strong><?php echo $comment['username']; ?>:</strong> <?php echo $comment['content']; ?> (<?php echo date('Y-m-d H:i:s', strtotime($comment['created_at'])); ?>)
-        </li>
-      <?php endforeach; ?>
-    </ul>
-  <?php else : ?>
-    <p>No comments yet.</p>
-  <?php endif; ?>
-
-  <?php if ($isLoggedIn) : ?>
-    <h2>Leave a Comment</h2>
-    <form action="add_comment.php" method="post">
-      <input type="hidden" name="post_id" value="<?php echo $postId; ?>">  
-      <textarea name="content" id="content" placeholder="Write your comment here..." required></textarea>
-      <button type="submit">Post Comment</button>
-    </form>
-  <?php else : ?>
-    <p>Please log in to leave a comment.</p>
-  <?php endif; ?>
-
-  <?php
-  // Close database connection
-  mysqli_close($connection);
-  ?>
-
+            mediaItems[currentMediaIndex].style.display = 'none';
+            currentMediaIndex = (currentMediaIndex + 1) % mediaItems.length;
+            postMediaDiv.dataset.currentMediaIndex = currentMediaIndex; 
+            mediaItems[currentMediaIndex].style.display = 'block';
+        }
+    </script>
 </body>
 </html>
