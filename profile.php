@@ -194,8 +194,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                 </ul>
             </div>
         </div>
-        <?php if (!$editing): ?> <button type="submit" name="edit_mode" value="true">Edit</button>
-        <?php else: ?> <button type="submit" name="submit">Update Profile</button> <?php endif; ?>
+        <?php if (!$editing): ?> <button type="submit" name="edit_mode" value="true" class="show-data-btn">Edit</button>
+        <?php else: ?> <button type="submit" name="submit" class="show-data-btn">Update Profile</button> <?php endif; ?>
     </form>
 
 </div>

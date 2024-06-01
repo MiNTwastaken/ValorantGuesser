@@ -223,11 +223,11 @@ function addRandomDailyChallenge() {
 
     <div class="admin-panel">
         <h2>Gamedata Management Panel</h2>
-        <form method="post" action=""> <button type="submit" name="update_data">Update Game Data</button>
+        <form method="post" action=""> <button type="submit" name="update_data" class="show-data-btn">Update Game Data</button>
         </form>
 
         <form method="post" action="">
-            <button type="submit" name="add_daily_challenge">Add Random Daily Challenge</button>
+            <button type="submit" name="add_daily_challenge" class="show-data-btn">Add Random Daily Challenge</button>
         </form>
 
         <div id="update-status"></div> 

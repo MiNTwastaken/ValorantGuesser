@@ -198,8 +198,7 @@ if (isset($_GET['searchTerm']) && isset($_GET['currentCategory'])) {
         </form>
         <?php elseif (empty($challenges)): ?>
             <p>No daily challenges available yet.</p>
-        <?php else: ?> 
-            <p>You won! All challenges completed.</p>
+        <?php else: ?>
             <form method="post" action="">  
                 <button type="submit" name="replay">Replay</button> 
             </form>
