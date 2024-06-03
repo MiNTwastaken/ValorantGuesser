@@ -12,15 +12,23 @@ if (!$connection) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $title = mysqli_real_escape_string($connection, $_POST["title"]);
-    $content = mysqli_real_escape_string($connection, $_POST["content"]);
+    $title = htmlspecialchars(trim($_POST["title"]));
+    $content = htmlspecialchars(trim($_POST["content"]));
     $createdBy = $_SESSION["username"];
-    $tags_id = mysqli_real_escape_string($connection, $_POST["tags_id"]); 
+    $tags_id = (int)$_POST["tags_id"];
 
+    // Input Validation (Example)
+    if (empty($title) || empty($content)) {
+        echo "Title and content are required fields.";
+        exit;
+    }
+
+    // Handle Media Uploads
     $uploadedMedia = array();
     $uploadDir = "C:/xampp/htdocs/valorantfanpage/content/"; 
     $allowedTypes = array("jpg", "jpeg", "png", "gif", "mp4", "webm");
     $maxFileSize = 5 * 1024 * 1024; 
+    $mediaString = "";
 
     if (isset($_FILES["media"]) && is_array($_FILES["media"]["name"])) {
         foreach ($_FILES["media"]["name"] as $key => $name) {
@@ -30,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($error === UPLOAD_ERR_OK) {
                 $fileExtension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
                 if (in_array($fileExtension, $allowedTypes) && $_FILES["media"]["size"][$key] <= $maxFileSize) {
-                    $newFileName = bin2hex(random_bytes(8)) . '_' . basename($name); 
+                    $newFileName = bin2hex(random_bytes(8)) . '.' . $fileExtension; // Add a dot before the extension
                     $targetFile = $uploadDir . $newFileName;
 
                     if (move_uploaded_file($tmpName, $targetFile)) {
@@ -49,13 +57,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $mediaString = implode(",", $uploadedMedia);
 
-    // Database insertion
+    // Prepare and Execute Query with Prepared Statement
     $sql = "INSERT INTO posts (title, content, media, created_by, tags_id) VALUES (?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($connection, $sql);
     mysqli_stmt_bind_param($stmt, "ssssi", $title, $content, $mediaString, $createdBy, $tags_id);
 
     if (mysqli_stmt_execute($stmt)) {
-        header("Location: social.php"); 
+        header("Location: social.php");
         exit();
     } else {
         echo "Error creating post: " . mysqli_error($connection);
@@ -63,6 +71,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     mysqli_stmt_close($stmt);
 }
-
 mysqli_close($connection);
 ?>

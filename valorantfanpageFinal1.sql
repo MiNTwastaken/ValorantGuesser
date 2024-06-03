@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 31, 2024 at 03:08 PM
+-- Generation Time: Jun 03, 2024 at 10:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -2737,10 +2737,10 @@ CREATE TABLE `posts` (
 --
 
 INSERT INTO `posts` (`id`, `title`, `content`, `media`, `tags_id`, `created_at`, `created_by`, `likes`) VALUES
-(57, 'Jett Boosting on Ascent - Pro Tips to Soar Higher!', 'Hey guys! Been practicing Jett a lot lately, and I\\\'ve discovered some awesome Updraft and Tailwind combos on Ascent. Ever wanted to get that super high angle on A site? Or surprise enemies from an unexpected spot on B? I\\\'ve got you covered! Check out my detailed guide with videos in the comments.  Let\\\'s get those frags raining down!', '6d2b7a9bfb2f6efe_dfbevii-4b5deebe-8052-4be7-b7b5-c30e77dcc091.jpg', 1, '2024-05-30 01:02:36', 'OGadmin', 0),
-(58, 'Ascent Secrets: Master the Bike on A entrance.', 'Ascent attack on the A site is truly hard, that\\\'s why most people leave it for flanking. I\\\'ve found out you can silently jump on the box right next to the barrier wall. I am going to show it in the video.', 'b4286eb8a1df27e4_y2mate.so - Silent Jump From Motorcycle To _A main wall_ _ Valorant Ascent-NSt4cSxZSVM-360p-1717020483.mp4', 1, '2024-05-30 01:10:42', 'OGadmin', 0),
-(59, 'The Phantom vs. Vandal Debate: It\\\'s Time to Settle This!', 'Which rifle reigns supreme: the Phantom or the Vandal? It\\\'s the age-old Valorant debate, and I\\\'m here to share my thoughts. I\\\'ll break down the pros and cons of each gun, share some of my own stats, and give you some tips on when to pick which one. Let\\\'s hear your opinions in the comments! Let\\\'s finally put this debate to rest!', 'c2da58c1b842c12a_Jqa-r3.gif,0393483303b46144_672px-Vandal_ar-762_VALORANT.png,a8d96c85ae4bc9b7_672px-Phantom_sw-acr_VALORANT.png', 3, '2024-05-30 01:19:03', 'OGadmin', 0),
-(60, 'Funny Moment: That Time I Teleported into a Wall... (Omen Mains, Where You At?)', 'Omen mains, you know the struggle. Sometimes, those teleports just don\\\'t go as planned. I had a hilarious match where I tried to flank with my ultimate, but miscalculated and ended up inside a wall.  My team was laughing so hard, they forgot to plant the spike!  Share your funniest Omen mishaps in the comments – let\\\'s have a good laugh together!', '5624104e961321c6_egage.png,657850b81b9e5377_failedd.png', 3, '2024-05-30 01:23:52', 'OGadmin', 0);
+(57, 'Jett Boosting on Ascent - Pro Tips to Soar Higher!', 'Hey guys! Been practicing Jett a lot lately, and I\'ve discovered some awesome Updraft and Tailwind combos on Ascent. Ever wanted to get that super high angle on A site? Or surprise enemies from an unexpected spot on B? I\'ve got you covered! Check out my detailed guide with videos in the comments.  Let\'s get those frags raining down!', '6d2b7a9bfb2f6efe_dfbevii-4b5deebe-8052-4be7-b7b5-c30e77dcc091.jpg', 1, '2024-05-30 01:02:36', 'OGadmin', 0),
+(58, 'Ascent Secrets: Master the Bike on A entrance.', 'Ascent attack on the A site is truly hard, that\'s why most people leave it for flanking. I\'ve found out you can silently jump on the box right next to the barrier wall. I am going to show it in the video.', 'b4286eb8a1df27e4_y2mate.so - Silent Jump From Motorcycle To _A main wall_ _ Valorant Ascent-NSt4cSxZSVM-360p-1717020483.mp4', 1, '2024-05-30 01:10:42', 'OGadmin', 0),
+(59, 'The Phantom vs. Vandal Debate: It\'s Time to Settle This!', 'Which rifle reigns supreme: the Phantom or the Vandal? It\'s the age-old Valorant debate, and I\'m here to share my thoughts. I\'ll break down the pros and cons of each gun, share some of my own stats, and give you some tips on when to pick which one. Let\'s hear your opinions in the comments! Let\'s finally put this debate to rest!', 'c2da58c1b842c12a_Jqa-r3.gif,0393483303b46144_672px-Vandal_ar-762_VALORANT.png,a8d96c85ae4bc9b7_672px-Phantom_sw-acr_VALORANT.png', 3, '2024-05-30 01:19:03', 'OGadmin', 0),
+(60, 'Funny Moment: That Time I Teleported into a Wall... (Omen Mains, Where You At?)', 'Omen mains, you know the struggle. Sometimes, those teleports just don\'t go as planned. I had a hilarious match where I tried to flank with my ultimate, but miscalculated and ended up inside a wall.  My team was laughing so hard, they forgot to plant the spike!  Share your funniest Omen mishaps in the comments – let\'s have a good laugh together!', '5624104e961321c6_egage.png,657850b81b9e5377_failedd.png', 3, '2024-05-30 01:23:52', 'OGadmin', 0);
 
 -- --------------------------------------------------------
 

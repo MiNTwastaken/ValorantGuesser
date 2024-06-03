@@ -84,11 +84,45 @@ $posts = getAllPosts($connection);
             cursor: pointer;
         }
         .file-preview {
-            max-width: 100%; /* Allow them to take up full width */
-            height: 150px;    /* Set a fixed height */
-            object-fit: contain; /* Fit the content inside the container (might leave empty space)*/
+            max-width: 100%;
+            height: 150px; 
+            object-fit: contain;
+        }
+        #tags {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px; 
+            font-size: 1rem;
+            width: 100%;
+            background-color: #fff;
+            color: #333;
+            appearance: none;
+            -webkit-appearance: none;
         }
 
+        #tags option { /* Style the options inside the dropdown */
+            padding: 5px;
+            background-color: #fff;
+            color: #333;
+        }
+
+        #tags:focus { 
+            outline: none; 
+            border-color: #007bff;
+        }
+
+        #tags::-ms-expand { 
+            display: none;
+        }
+
+        #tags::after { 
+            content: '▼'; 
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            pointer-events: none; 
+        }
     </style>
 </head>
 <body>
@@ -214,9 +248,9 @@ $posts = getAllPosts($connection);
             <div class="post-list">
                 <?php foreach ($posts as $post): ?>
                     <div class="post-box" data-post-id="<?php echo $post['id']; ?>">
-                        <h3 class="post-title"><?php echo $post['title']; ?></h3>
+                        <h3 class="post-title"><?php echo htmlspecialchars_decode($post['title']); ?></h3>
                         <p class="post-meta">Created by: <span class="post-author"><?php echo $post['created_by']; ?></span> on <span class="post-date"><?php echo $post['created_at']; ?></span> - <span class="post-tags"><?php echo $post['tag_name'] ?? 'No tag'; ?></span> </p> 
-                        <p class="post-content"><?php echo $post['content']; ?></p>
+                        <p class="post-content"><?php echo htmlspecialchars_decode($post['content']); ?></p>
                         <div class="post-media" data-current-media-index="0"> <?php 
                             $mediaFiles = explode(',', $post['media']);
                             foreach($mediaFiles as $index => $mediaFile) : 
