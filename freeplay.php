@@ -74,11 +74,28 @@ function updateUserExperience($conn, $username, $expChange) {
         $nextLevelData = $conn->query("SELECT id FROM levels WHERE id = $nextLevel")->fetch_assoc();
         if ($nextLevelData !== null) {  // Proceed with level up only if the next level exists
             // Corrected line:
-            $conn->query("UPDATE user SET lvl = $nextLevel, exp = 0 WHERE username = '$username'"); 
-            echo "<p>Congratulations! You leveled up!</p>";
+            $conn->query("UPDATE user SET lvl = $nextLevel, exp = 0 WHERE username = '$username'");
         }
     }
 }
+// Get user information based on username from session
+$username = $_SESSION["username"];
+$sql = "SELECT u.*, l.name AS level_name, l.total_exp AS next_level_exp 
+        FROM user u 
+        JOIN levels l ON u.lvl = l.id 
+        WHERE username = ?";
+$stmt = mysqli_prepare($conn, $sql);  // Assuming you have a $conn variable for your database connection
+mysqli_stmt_bind_param($stmt, "s", $username);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+
+if ($result && mysqli_num_rows($result) == 1) {
+    $user = mysqli_fetch_assoc($result);
+} else {
+    // Handle case where user is not found (e.g., redirect or display error)
+}
+
+mysqli_stmt_close($stmt);
 
 // Initialize variables
 $username = $_SESSION['username'];
@@ -120,9 +137,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Load a new challenge after each guess
         $currentChallenge = getChallenge($chosenCategory);
-        $_SESSION['current_challenge'] = $currentChallenge; 
+        $_SESSION['current_challenge'] = $currentChallenge;
+        // Re-fetch user data after updating experience
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "s", $username);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result && mysqli_num_rows($result) == 1) {
+            $user = mysqli_fetch_assoc($result); // Update $user with new values
+        } else {
+            // Handle case where user is not found
+        }
+
+        mysqli_stmt_close($stmt);
     }
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -183,8 +215,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         #search-results {
             margin-top: 10px;
             text-align: left;
-            max-height: 200px; /* Set a maximum height for the results container */
-            overflow-y: auto; /* Add a vertical scrollbar if results exceed the height */
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         .search-result {
@@ -210,6 +242,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             width: 100%;
             z-index: 9999;
         }
+        .exp-bar {
+            position: fixed;
+            bottom: 20px;
+            right: 10px;
+            background-color: #333; 
+            padding: 8px;
+            min-height: 30px;
+            text-align: center;
+        }
+
+        .exp-bar div { /* Progress bar styling */
+            background-color: #007bff; 
+            height: 10px;
+            margin-bottom: 5px;
+        }
+
+        .exp-bar span {
+            color: white;
+            display: block;
+        }
+        #level-up-message {
+            margin-top: 10px;
+            text-align: center;
+            color: #ff4500;
+        }
+        .category-form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Style the dropdown itself */
+        .category-form select {
+            background-color: #383838;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -218,14 +289,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php // Move the message display outside the form 
         if (isset($message)) echo $message; ?>
         <form method="post" action="">
-            <select name="category" onchange="this.form.submit()"> 
-                <option value="1" <?php if ($chosenCategory == 1) echo 'selected'; ?>>Agents</option>
-                <option value="2" <?php if ($chosenCategory == 2) echo 'selected'; ?>>Weapons</option>
-                <option value="3" <?php if ($chosenCategory == 3) echo 'selected'; ?>>Sprays</option>
-                <option value="4" <?php if ($chosenCategory == 4) echo 'selected'; ?>>Player Cards</option>
-                <option value="5" <?php if ($chosenCategory == 5) echo 'selected'; ?>>Buddies</option>
-                <option value="6" <?php if ($chosenCategory == 6) echo 'selected'; ?>>Skins</option>
-            </select>
+            <div class="category-form">
+                <select name="category" onchange="this.form.submit()"> 
+                    <option value="1" <?php if ($chosenCategory == 1) echo 'selected'; ?>>Agents</option>
+                    <option value="2" <?php if ($chosenCategory == 2) echo 'selected'; ?>>Weapons</option>
+                    <option value="3" <?php if ($chosenCategory == 3) echo 'selected'; ?>>Sprays</option>
+                    <option value="4" <?php if ($chosenCategory == 4) echo 'selected'; ?>>Player Cards</option>
+                    <option value="5" <?php if ($chosenCategory == 5) echo 'selected'; ?>>Buddies</option>
+                    <option value="6" <?php if ($chosenCategory == 6) echo 'selected'; ?>>Skins</option>
+                </select>
+            </div>
         </form>
 
         <form method="post" action=""> 
@@ -240,9 +313,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <div id="search-results"></div>
         </form>
-
-
-    </div>
 
     <script>
         const guessInput = document.getElementById('guess-input');
@@ -351,6 +421,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <?php endif; ?>
             </nav>
         </div>
+    </div>
+        <div class="exp-bar">
+        <span>Level: <?php echo $user['level_name']; ?> EXP: <?php echo $user['exp']; ?> / <?php echo $user['next_level_exp']; ?></span>
+        <div style="width: <?php echo ($user['exp'] / $user['next_level_exp']) * 100; ?>%"></div>
     </div>
 </body>
 </html>
