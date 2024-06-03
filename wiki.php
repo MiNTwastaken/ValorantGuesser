@@ -88,6 +88,22 @@
         .item .callouts li {
         font-size: 0.8rem;
         }
+        .read-more-btn {
+            background-color: #FF4654; /* Valorant Red */
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            display: block; /* Make it take up full width */
+            margin-top: auto; /* Push to bottom */
+        }
+
+        .read-more-btn:hover {
+            background-color: #D93645; /* Slightly darker red on hover */
+        }
 
     </style>
 </head>
@@ -175,122 +191,144 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            function createItem(item, type) {
-                const itemDiv = document.createElement("div");
-                itemDiv.classList.add("item", type);
+            document.addEventListener("DOMContentLoaded", function() {
+                const MAX_DESCRIPTION_LENGTH = 100; // Or your desired character limit
+                const MAX_ABILITIES_DISPLAYED = 1; // Number of abilities to show before "Read More"
 
-                const itemName = document.createElement("h3");
-                itemName.textContent = item.displayName;
-                itemDiv.appendChild(itemName);
+                // Function to create and display an item (agent, weapon, map, or skin)
+                function createItem(item, type) {
+                    const itemDiv = document.createElement("div");
+                    itemDiv.classList.add("item", type);
 
-                const itemImage = document.createElement("img");
-                itemImage.src = item.displayIcon;
-                itemDiv.appendChild(itemImage);
+                    const itemName = document.createElement("h3");
+                    itemName.textContent = item.displayName;
+                    itemDiv.appendChild(itemName);
 
-                const descriptionText = item.description || item.tacticalDescription;
-                if (descriptionText) {
+                    const itemImage = document.createElement("img");
+                    itemImage.src = item.displayIcon;
+                    itemDiv.appendChild(itemImage);
+
+                    // Description handling (for agents, weapons, maps)
+                    const fullDescription = item.description || item.tacticalDescription || "No description available";
                     const itemDescription = document.createElement("p");
-                    itemDescription.textContent = descriptionText;
+                    if (fullDescription.length > MAX_DESCRIPTION_LENGTH) {
+                        itemDescription.textContent = fullDescription.substring(0, MAX_DESCRIPTION_LENGTH) + "...";
+                        const readMoreButton = document.createElement("button");
+                        readMoreButton.textContent = "Read More";
+                        readMoreButton.classList.add("read-more-btn");
+                        readMoreButton.addEventListener("click", () => {
+                            window.location.href = `wiki_details.php?uuid=${item.uuid}&type=${type}`;
+                        });
+                        itemDiv.appendChild(readMoreButton);
+                    } else {
+                        itemDescription.textContent = fullDescription;
+                    }
                     itemDiv.appendChild(itemDescription);
+
+                    // Handle abilities (for agents)
+                    if (type === "agent") {
+                        const agentRole = document.createElement("p");
+                        agentRole.textContent = `Role: ${item.role.displayName}`;
+                        itemDiv.appendChild(agentRole);
+                        
+                        const abilitiesList = document.createElement("ul");
+                        let abilityCount = 0; 
+                        item.abilities.forEach(ability => {
+                            if (ability.slot !== "Passive" && abilityCount < MAX_ABILITIES_DISPLAYED) {
+                                const abilityItem = document.createElement("li");
+                                abilityItem.textContent = `${ability.displayName}: ${ability.description}`;
+                                abilitiesList.appendChild(abilityItem);
+                                abilityCount++;
+                            }
+                        });
+
+                        itemDiv.appendChild(abilitiesList);
+                    }
+
+                    // Handle weapon stats (for weapons)
+                    if (type === "weapon" && item.weaponStats) {
+                        const weaponStats = document.createElement("ul");
+                        weaponStats.innerHTML = `
+                            <li>Fire Rate: ${item.weaponStats.fireRate}</li>
+                            <li>Magazine Size: ${item.weaponStats.magazineSize}</li>
+                            <li>Cost: ${item.shopData?.cost ?? "N/A"}</li>
+                        `; 
+                        itemDiv.appendChild(weaponStats);
+                    } 
+
+                    // Handle map callouts (for maps)
+                    if (type === "map" && item.callouts) {
+                        const calloutsList = document.createElement("ul");
+                        calloutsList.classList.add("callouts");
+                        item.callouts.forEach(callout => {
+                            const calloutItem = document.createElement("li");
+                            calloutItem.textContent = `${callout.regionName} (${callout.superRegionName})`;
+                            calloutsList.appendChild(calloutItem);
+                        });
+                        itemDiv.appendChild(calloutsList);
+                    }
+
+                    // Handle skins (for skins)
+                    if (type === "skin") {
+                        const levelsList = document.createElement("ul");
+                        item.levels.forEach(level => {
+                            const levelItem = document.createElement("li");
+                            levelItem.textContent = level.displayName;
+                            levelsList.appendChild(levelItem);
+                        });
+                        itemDiv.appendChild(levelsList);
+
+                        if (item.chromas && item.chromas.length > 0) {
+                            const chromasList = document.createElement("ul");
+                            item.chromas.forEach(chroma => {
+                                const chromaItem = document.createElement("li");
+                                chromaItem.textContent = chroma.displayName;
+                                chromasList.appendChild(chromaItem);
+                            });
+                            itemDiv.appendChild(chromasList);
+                        }
+                    }
+
+                    return itemDiv; 
                 }
 
-                return itemDiv;
-            }
-
-            function fetchAndDisplayItems(url, containerId, type) {
-                const container = document.getElementById(containerId);
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        data.data.forEach(item => {
-                            if (type === 'agent' && !item.isPlayableCharacter) return;
-                            const itemDiv = createItem(item, type);
-
-                            if (type === "agent") {
-                                const agentRole = document.createElement("p");
-                                agentRole.textContent = `Role: ${item.role.displayName}`;
-                                itemDiv.appendChild(agentRole);
-                                const abilitiesList = document.createElement("ul");
-                                item.abilities.forEach(ability => {
-                                    const abilityItem = document.createElement("li");
-                                    abilityItem.textContent = `${ability.displayName}: ${ability.description}`;
-                                    abilitiesList.appendChild(abilityItem);
-                                });
-                                itemDiv.appendChild(abilitiesList);
-                            } else if (type === "weapon") {
-                                if (item.weaponStats) {
-                                    const weaponStats = document.createElement("ul");
-                                    weaponStats.innerHTML = `
-                                        <li>Fire Rate: ${item.weaponStats.fireRate}</li>
-                                        <li>Magazine Size: ${item.weaponStats.magazineSize}</li>
-                                        <li>Cost: ${item.shopData?.cost ?? "N/A"}</li>
-                                    `;
-                                    itemDiv.appendChild(weaponStats);
-                                } else {
-                                    const noStatsMessage = document.createElement("p");
-                                    noStatsMessage.textContent = "Weapon stats not available.";
-                                    itemDiv.appendChild(noStatsMessage);
-                                }
-                            } else if (type === "map") {
-                                if (item.callouts) {
-                                    const calloutsList = document.createElement("ul");
-                                    calloutsList.classList.add("callouts");
-                                    item.callouts.forEach(callout => {
-                                        const calloutItem = document.createElement("li");
-                                        calloutItem.textContent = `${callout.regionName} (${callout.superRegionName})`;
-                                        calloutsList.appendChild(calloutItem);
-                                    });
-                                    itemDiv.appendChild(calloutsList);
-                                }
-                            } else if (type === "skin") {
-                                const levelsList = document.createElement("ul");
-                                item.levels.forEach(level => {
-                                    const levelItem = document.createElement("li");
-                                    levelItem.textContent = level.displayName;
-                                    levelsList.appendChild(levelItem);
-                                });
-                                itemDiv.appendChild(levelsList);
-
-                                if (item.chromas && item.chromas.length > 0) {
-                                    const chromasList = document.createElement("ul");
-                                    item.chromas.forEach(chroma => {
-                                        const chromaItem = document.createElement("li");
-                                        chromaItem.textContent = chroma.displayName;
-                                        chromasList.appendChild(chromaItem);
-                                    });
-                                    itemDiv.appendChild(chromasList);
-                                }
-                            }
-                            container.appendChild(itemDiv);
-                        });
-                    })
-                    .catch(error => {
-                        container.innerHTML = "<p>Error fetching data: " + error.message + "</p>";
-                        console.error('Fetch Error:', error); 
-                    });
-            }
-
-            function filterContent() {
-                const hash = window.location.hash.substring(1); // Get the hash (e.g., 'skins')
-                const containers = ["agents-container", "weapons-container", "maps-container", "skins-container"];
-
-                // Show/hide containers
-                containers.forEach(containerId => {
+                // Function to fetch and display items of a specific type
+                function fetchAndDisplayItems(url, containerId, type) {
                     const container = document.getElementById(containerId);
-                    container.style.display = containerId.startsWith(hash) || hash === "" ? "grid" : "none";
-                });
-            }
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.data.forEach(item => {
+                                if (type === 'agent' && !item.isPlayableCharacter) return;
+                                const itemDiv = createItem(item, type);
+                                container.appendChild(itemDiv);
+                            });
+                        })
+                        .catch(error => {
+                            container.innerHTML = "<p>Error fetching data: " + error.message + "</p>"; 
+                            console.error('Fetch Error:', error);
+                        });
+                }
 
-            // Call filterContent on page load AND on hash change
-            filterContent(); // Initial filtering
-            window.addEventListener('hashchange', filterContent); // Listen for changes
+                function filterContent() {
+                    const hash = window.location.hash.substring(1); // Get the hash (e.g., 'skins')
+                    const containers = ["agents-container", "weapons-container", "maps-container", "skins-container"];
 
-            fetchAndDisplayItems('https://valorant-api.com/v1/agents', 'agents-container', 'agent');
-            fetchAndDisplayItems('https://valorant-api.com/v1/weapons', 'weapons-container', 'weapon');
-            fetchAndDisplayItems('https://valorant-api.com/v1/maps', 'maps-container', 'map');
-            fetchAndDisplayItems('https://valorant-api.com/v1/weapons/skins', 'skins-container', 'skin');
+                    containers.forEach(containerId => {
+                        const container = document.getElementById(containerId);
+                        container.style.display = containerId.startsWith(hash) || hash === "" ? "grid" : "none";
+                    });
+                }
+
+                filterContent(); 
+                window.addEventListener('hashchange', filterContent); 
+
+                fetchAndDisplayItems('https://valorant-api.com/v1/agents', 'agents-container', 'agent');
+                fetchAndDisplayItems('https://valorant-api.com/v1/weapons', 'weapons-container', 'weapon');
+                fetchAndDisplayItems('https://valorant-api.com/v1/maps', 'maps-container', 'map');
+                fetchAndDisplayItems('https://valorant-api.com/v1/weapons/skins', 'skins-container', 'skin');
         });
+
     </script>
 </body>
 </html>
