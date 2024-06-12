@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 03, 2024 at 10:51 PM
+-- Generation Time: Jun 12, 2024 at 02:54 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -2745,6 +2745,29 @@ INSERT INTO `posts` (`id`, `title`, `content`, `media`, `tags_id`, `created_at`,
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `quizzes`
+--
+
+CREATE TABLE `quizzes` (
+  `id` int(11) NOT NULL,
+  `quizzler` varchar(255) DEFAULT NULL,
+  `question` text DEFAULT NULL,
+  `answers` text DEFAULT NULL,
+  `correct_answer` int(11) DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `quizzes`
+--
+
+INSERT INTO `quizzes` (`id`, `quizzler`, `question`, `answers`, `correct_answer`, `image_path`) VALUES
+(2, 'OGadmin', 'Who got the biggest GYAT???', 'Raze,Jett,Loba,Brim', 3, 'img/quizzes/6668ecf953bdd_1718152441.jpg'),
+(5, 'OGadmin', 'E', 'eew,wea,ewa', 1, 'img/quizzes/6668efc8ea63f_1718153160.jpg');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tags`
 --
 
@@ -2786,7 +2809,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`username`, `password`, `email`, `email_confirmed`, `picture`, `favorite`, `admin`, `lvl`, `exp`, `joined_at`) VALUES
-('OGadmin', '$2y$10$LcchI22A9E5DPQeAJVayzOQFErncwOt.W.CoajNFyppSzggO2VVRe', 'admin@gmail.com', 1, 'img/profile/drink.png', 'Gekko', 1, 6, 138, '2024-05-01 10:42:34'),
+('OGadmin', '$2y$10$LcchI22A9E5DPQeAJVayzOQFErncwOt.W.CoajNFyppSzggO2VVRe', 'admin@gmail.com', 1, 'img/profile/drink.png', 'Gekko', 1, 6, 147, '2024-05-01 10:42:34'),
 ('Shad', '$2y$10$eHz9PQbu/rk4iZ6Awytp4uPsWRiU8cFJ4J3WXDF7kChNUaIjnPs5i', 'shadowrobbrt@gmail.com', 1, 'img/profile/box.jpg', 'Gekko', 1, 2, 47, '2024-05-25 19:58:30');
 
 --
@@ -2829,6 +2852,12 @@ ALTER TABLE `posts`
   ADD KEY `tags_id` (`tags_id`);
 
 --
+-- Indexes for table `quizzes`
+--
+ALTER TABLE `quizzes`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tags`
 --
 ALTER TABLE `tags`
@@ -2868,6 +2897,12 @@ ALTER TABLE `gamedata`
 --
 ALTER TABLE `posts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+
+--
+-- AUTO_INCREMENT for table `quizzes`
+--
+ALTER TABLE `quizzes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables

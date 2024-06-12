@@ -83,123 +83,56 @@ mysqli_close($connection);
     <link rel="stylesheet" href="styless.css"> 
 </head>
 <body>
-<script src="script.js"></script>
-<div class="background-video">
-        <video autoplay muted loop>
-            <source src="content/illustration.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
+    <script src="script.js"></script>
+    <?php include 'navbar.php'; ?>
+    <div class="content">
+        <h2><?php echo $postTitle; ?></h2>
+        <p><?php echo $postContent; ?></p>
+
+        <?php if (!empty($mediaFiles)): ?> 
+            <div class="post-media" data-current-media-index="0">
+            <?php foreach ($mediaFiles as $index => $mediaFile) : ?>
+                <?php
+                    $filePath = "content/" . $mediaFile;
+                    $fileType = mime_content_type($filePath);
+                    $display = ($index === 0) ? 'block' : 'none'; 
+                ?>
+                <div class="media-item" style="display: <?= $display ?>;">
+                    <?php if (strpos($fileType, 'image/') === 0) : ?>
+                        <img src="<?= $filePath ?>" alt="Post Media" class="file-preview">
+                    <?php elseif (strpos($fileType, 'video/') === 0) : ?>
+                        <video src="<?= $filePath ?>" controls class="file-preview"></video>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+                
+                <div class="media-controls" style="display: <?php echo (count($mediaFiles) > 1) ? 'flex' : 'none'; ?>;">
+                    <button class="media-prev" onclick="showPrevMedia(<?php echo $postId; ?>)">&lt;</button>
+                    <button class="media-next" onclick="showNextMedia(<?php echo $postId; ?>)">&gt;</button>
+                </div>
+            </div>
+        <?php endif; ?>
+
+
+        <h3>Comments</h3>
+
+        <?php if (isset($_SESSION["username"])): ?>
+            <form action="" method="post">
+                <textarea name="comment_text" placeholder="Write your comment..."></textarea>
+                <button type="submit">Submit Comment</button>
+            </form>
+        <?php else: ?>
+            <p>You need to be logged in to comment.</p>
+        <?php endif; ?>
+        <ul class="comment-list">
+            <?php foreach ($comments as $comment): ?>
+                <li>
+                    <strong><?php echo $comment['commenter']; ?></strong> (<?php echo $comment['created_at']; ?>):
+                    <p><?php echo $comment['comment_text']; ?></p>
+                </li>
+            <?php endforeach; ?>
+        </ul>
     </div>
-<div class="navbar">
-    <div class="container">
-        <a href="index.php">Valorant Fanpage</a>
-        <nav>
-            <div class="dropdown">
-                <a href="wiki.php" class="dropdown-btn">Wiki</a>
-                <div class="dropdown-content">
-                    <a href="wiki.php#agents">Agents</a>
-                    <a href="wiki.php#weapons">Weapons</a>
-                    <a href="wiki.php#maps">Maps</a>
-                    <a href="wiki.php#skins">Skins</a>
-                </div>
-            </div>
-
-            <div class="dropdown">
-                <a href="social.php" class="dropdown-btn">Social</a>
-                <div class="dropdown-content">
-                    <a href="social.php#general">General Discussion</a>
-                    <a href="social.php#competitive">Competitive Play</a>
-                    <a href="social.php#lore">Lore & Story</a>
-                    <a href="social.php#creations">Community Creations</a>
-                </div>
-            </div>
-            
-            <div class="dropdown">
-                <a href="minigames.php" class="dropdown-btn">Minigames</a>
-                <div class="dropdown-content">
-                    <a href="dailychallenge.php">Daily Quiz</a>
-                    <a href="aimtrainer.php">One Shot</a>
-                    <a href="freeplay.php">Free Play</a>
-                    <a href="leaderboard.php">Leaderboard</a>
-                </div>
-            </div>
-            <?php
-            $isLoggedIn = isset($_SESSION["username"]);
-            ?>
-
-            <?php if ($isLoggedIn && isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) : ?>
-                <div class="dropdown">
-                    <a href="admin.php" class="dropdown-btn">Admin Panel</a>
-                    <div class="dropdown-content">
-                        <a href="admin.php">Manage Users</a>
-                        <a href="gamedata.php">Manage Game Data</a>
-                        <a href="posts.php">Manage Posts</a>
-                    </div>
-                </div>
-            <?php endif; ?>
-
-
-            <?php if ($isLoggedIn) : ?>
-                <div class="logged-in-user">
-                    <a href="profile.php" class="profile-link"><?php echo $_SESSION["username"]; ?></a>
-                    <form action="logout.php" method="post">
-                        <button type="submit">Logout</button>
-                    </form>
-                </div>
-            <?php else : ?>
-                <a href="login.php" class="login-btn">Login</a>
-            <?php endif; ?>
-        </nav>
-    </div>
-</div>
-        <div class="content">
-            <h2><?php echo $postTitle; ?></h2>
-            <p><?php echo $postContent; ?></p>
-
-            <?php if (!empty($mediaFiles)): ?> 
-                <div class="post-media" data-current-media-index="0">
-                <?php foreach ($mediaFiles as $index => $mediaFile) : ?>
-                    <?php
-                        $filePath = "content/" . $mediaFile;
-                        $fileType = mime_content_type($filePath);
-                        $display = ($index === 0) ? 'block' : 'none'; 
-                    ?>
-                    <div class="media-item" style="display: <?= $display ?>;">
-                        <?php if (strpos($fileType, 'image/') === 0) : ?>
-                            <img src="<?= $filePath ?>" alt="Post Media" class="file-preview">
-                        <?php elseif (strpos($fileType, 'video/') === 0) : ?>
-                            <video src="<?= $filePath ?>" controls class="file-preview"></video>
-                        <?php endif; ?>
-                    </div>
-                <?php endforeach; ?>
-                    
-                    <div class="media-controls" style="display: <?php echo (count($mediaFiles) > 1) ? 'flex' : 'none'; ?>;">
-                        <button class="media-prev" onclick="showPrevMedia(<?php echo $postId; ?>)">&lt;</button>
-                        <button class="media-next" onclick="showNextMedia(<?php echo $postId; ?>)">&gt;</button>
-                    </div>
-                </div>
-            <?php endif; ?>
-
-
-            <h3>Comments</h3>
-
-            <?php if (isset($_SESSION["username"])): ?>
-                <form action="" method="post">
-                    <textarea name="comment_text" placeholder="Write your comment..."></textarea>
-                    <button type="submit">Submit Comment</button>
-                </form>
-            <?php else: ?>
-                <p>You need to be logged in to comment.</p>
-            <?php endif; ?>
-            <ul class="comment-list">
-                <?php foreach ($comments as $comment): ?>
-                    <li>
-                        <strong><?php echo $comment['commenter']; ?></strong> (<?php echo $comment['created_at']; ?>):
-                        <p><?php echo $comment['comment_text']; ?></p>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
     <script>
         // Show Previous Media Function
         function showPrevMedia(postId) {

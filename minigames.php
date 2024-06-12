@@ -3,83 +3,155 @@
 <head>
     <title>Valorant Minigames</title>
     <link rel="stylesheet" href="styless.css">
+    <style>
+        .user-quizzes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .user-quiz {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+
+        .user-quiz img {
+            max-width: 100%;
+            height: 200px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .user-quiz p {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .user-quiz .author {
+            font-size: 14px;
+            color: #666;
+            margin-top: -10px;
+        }
+
+        .user-quiz a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .user-quiz a:hover {
+            background-color: #0056b3;
+        }
+
+        .edit-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #FFA500;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .edit-btn:hover {
+            background-color: #CC8400;
+        }
+
+        .leaderboard-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ff4500;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .leaderboard-btn:hover {
+            background-color: #cc3700;
+        }
+
+        .create-quiz-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .create-quiz-btn:hover {
+            background-color: #3e8e41;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .minigame-grid {
+            margin-top: 20px;
+        }
+
+        .minigame-grid .minigame {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .minigame-grid .minigame h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .minigame-grid .minigame p {
+            font-size: 16px;
+        }
+
+        .minigame-grid .minigame a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .minigame-grid .minigame a:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-<script src="script.js"></script>
-    <div class="background-video">
-        <video autoplay muted loop>
-            <source src="content/illustration.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </div>
-    <div class="navbar">
-        <div class="container">
-            <a href="index.php">Valorant Fanpage</a>
-            <nav>
-                <div class="dropdown">
-                    <a href="wiki.php" class="dropdown-btn">Wiki</a>
-                    <div class="dropdown-content">
-                        <a href="wiki.php#agents">Agents</a>
-                        <a href="wiki.php#weapons">Weapons</a>
-                        <a href="wiki.php#maps">Maps</a>
-                        <a href="wiki.php#skins">Skins</a>
-                    </div>
-                </div>
-
-                <div class="dropdown">
-                    <a href="social.php" class="dropdown-btn">Social</a>
-                    <div class="dropdown-content">
-                        <a href="social.php#general">General Discussion</a>
-                        <a href="social.php#competitive">Competitive Play</a>
-                        <a href="social.php#lore">Lore & Story</a>
-                        <a href="social.php#creations">Community Creations</a>
-                    </div>
-                </div>
-                
-                <div class="dropdown">
-                    <a href="minigames.php" class="dropdown-btn">Minigames</a>
-                    <div class="dropdown-content">
-                        <a href="dailychallenge.php">Daily Quiz</a>
-                        <a href="aimtrainer.php">One Shot</a>
-                        <a href="freeplay.php">Free Play</a>
-                        <a href="leaderboard.php">Leaderboard</a>
-                    </div>
-                </div>
-
-                <?php
-                session_start();
-                $isLoggedIn = isset($_SESSION["username"]);
-                ?>
-
-                <?php if ($isLoggedIn && isset($_SESSION["admin"]) && $_SESSION["admin"] == 1) : ?>
-                    <div class="dropdown">
-                        <a href="admin.php" class="dropdown-btn">Admin Panel</a>
-                        <div class="dropdown-content">
-                            <a href="admin.php">Manage Users</a>
-                            <a href="gamedata.php">Manage Game Data</a>
-                            <a href="posts.php">Manage Posts</a>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-
-                <?php if ($isLoggedIn) : ?>
-                    <div class="logged-in-user">
-                        <a href="profile.php" class="profile-link"><?php echo $_SESSION["username"]; ?></a>
-                        <form action="logout.php" method="post">
-                            <button type="submit">Logout</button>
-                        </form>
-                    </div>
-                <?php else : ?>
-                    <a href="login.php" class="login-btn">Login</a>
-                <?php endif; ?>
-            </nav>
-        </div>
-    </div>
-
+    <script src="script.js"></script>
+    <?php session_start(); ?>
+    <?php include 'navbar.php'; ?>
     <div class="content">
         <h1>Valorant Minigames</h1>
         <p>Test your Valorant skills and knowledge with these fun minigames!</p>
+
+        <div style="text-align: center;">
+            <a href="leaderboard.php" class="leaderboard-btn">View Leaderboard</a>
+        </div>
 
         <div class="minigame-grid">
             <div class="minigame">
@@ -101,8 +173,53 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="leaderboard.php" class="leaderboard-btn">View Leaderboard</a>
+        <h2>User Created Quizzes</h2>
+
+        <?php
+        if (isset($_SESSION["username"])) {
+            echo '<div style="text-align: center;">';
+            echo '<a href="create_quiz.php" class="create-quiz-btn">Create a User Quiz</a>';
+            echo '</div>';
+        } else {
+            echo '<div class="login-prompt">';
+            echo '<p>To create quizzes, please <a href="login.php">log in</a> or <a href="register.php">register</a>.</p>';
+            echo '</div>';
+        }
+        ?>
+
+        <div class="user-quizzes">
+            <?php
+            // Fetch user-created quizzes from the database
+            $servername = "localhost";
+            $username = "root";
+            $password = "";
+            $dbname = "valorantfanpage";
+            $conn = new mysqli($servername, $username, $password, $dbname);
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+
+            $sql = "SELECT id, question, image_path, quizzler FROM quizzes";
+            $result = $conn->query($sql);
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo '<div class="user-quiz">';
+                    echo '<img src="' . $row["image_path"] . '" alt="Quiz Image">';
+                    echo '<p>Question: ' . $row["question"] . '</p>';
+                    echo '<p class="author">Created by: ' . $row["quizzler"] . '</p>';
+                    echo '<a href="quiz.php?quiz_id=' . $row["id"] . '">Play Quiz</a>';
+
+                    if (isset($_SESSION["username"]) && $_SESSION["username"] == $row["quizzler"]) {
+                        echo '<a href="edit_quiz.php?quiz_id=' . $row["id"] . '" class="edit-btn">Edit Quiz</a>';
+                    }
+
+                    echo '</div>';
+                }
+            } else {
+                echo "No user-created quizzes available.";
+            }
+            $conn->close();
+            ?>
         </div>
     </div>
 </body>
