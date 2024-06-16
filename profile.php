@@ -33,7 +33,7 @@ mysqli_stmt_close($stmt);
 // Handle edit mode using a hidden form field
 $editing = isset($_POST['edit_mode']) && $_POST['edit_mode'] === 'true';
 
-// Update Profile (remove username update)
+// Update Profile
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $editing = false; // Exit edit mode after submitting
 
@@ -68,10 +68,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     // Sanitize form data
     $newFavorite = mysqli_real_escape_string($connection, $_POST["favorite"]);
     $newEmail = mysqli_real_escape_string($connection, $_POST["email"]);
-    
+    $newPassword = $_POST["password"]; // Get the new password
+
+    // Check if the new password is provided
+    if (!empty($newPassword)) {
+        // Hash the new password
+        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+    } else {
+        // Use the existing password if no new password is provided
+        $hashedPassword = $user['password'];
+    }
+
     // Prepare and execute the SQL update statement (without username update)
-    $stmt = mysqli_prepare($connection, "UPDATE user SET picture = ?, favorite = ?, email = ? WHERE username = ?");
-    mysqli_stmt_bind_param($stmt, "ssss", $newPicture, $newFavorite, $newEmail, $username); 
+    $stmt = mysqli_prepare($connection, "UPDATE user SET picture = ?, favorite = ?, email = ?, password = ? WHERE username = ?");
+    mysqli_stmt_bind_param($stmt, "sssss", $newPicture, $newFavorite, $newEmail, $hashedPassword, $username); 
 
     if (mysqli_stmt_execute($stmt)) {
         // Update session email
@@ -91,6 +101,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 <head>
     <title>Profile</title>
     <link rel="stylesheet" href="styless.css">
+    <style>
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .profile-info {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .profile-picture {
+            margin-right: 20px;
+        }
+        .user-details ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .exp-bar {
+            background-color: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .exp-bar div {
+            background-color: #4caf50;
+            height: 10px;
+        }
+    </style>
+    <script>
+    function togglePasswordVisibility() {
+        var passwordField = document.getElementById("password");
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+        } else {
+            passwordField.type = "password";
+        }
+    }
+    </script>
 </head>
 <body>
     <?php include 'navbar.php'; ?>
@@ -107,7 +159,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                 </div>
                 <div class="user-details">
                     <ul>
-                        <li>Username: <?php echo htmlspecialchars($user['username']); ?></li> <li>Email: 
+                        <li>Username: <?php echo htmlspecialchars($user['username']); ?></li> 
+                        <li>Email: 
                             <?php if ($editing): ?>
                                 <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>">
                             <?php else: echo htmlspecialchars($user['email']); endif; ?></li>
@@ -121,37 +174,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                             <div style="width: <?php echo ($user['exp'] / $user['next_level_exp']) * 100; ?>%;"></div>
                         </div>
                         <li>Joined at: <?php echo $joinedAtFormatted; ?></li>
+                        <?php if ($editing): ?>
+                            <li>Password: 
+                                <input type="password" name="password" id="password">
+                                <input type="checkbox" onclick="togglePasswordVisibility()"> Show Password
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
-            <?php if (!$editing): ?> <button type="submit" name="edit_mode" value="true" class="show-data-btn">Edit</button>
-            <?php else: ?> <button type="submit" name="submit" class="show-data-btn">Update Profile</button> <?php endif; ?>
+            <?php if (!$editing): ?> 
+                <button type="submit" name="edit_mode" value="true" class="show-data-btn">Edit</button>
+            <?php else: ?> 
+                <button type="submit" name="submit" class="show-data-btn">Update Profile</button> 
+            <?php endif; ?>
         </form>
-
     </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-            const favoriteAgentSelect = document.getElementById('favoriteAgent');
+        const favoriteAgentSelect = document.getElementById('favoriteAgent');
 
-            // Fetch agent data from the API
-            fetch('https://valorant-api.com/v1/agents')
-                .then(response => response.json())
-                .then(data => {
-                    data.data.forEach(agent => {
-                        if (agent.isPlayableCharacter) {
-                            const option = document.createElement('option');
-                            option.value = agent.displayName;
-                            option.text = agent.displayName;
-                            // Set the selected attribute if it matches the user's favorite agent
-                            if (agent.displayName === "<?php echo $user['favorite']; ?>") {
-                                option.selected = true;
-                            }
-                            favoriteAgentSelect.add(option);
+        // Fetch agent data from the API
+        fetch('https://valorant-api.com/v1/agents')
+            .then(response => response.json())
+            .then(data => {
+                data.data.forEach(agent => {
+                    if (agent.isPlayableCharacter) {
+                        const option = document.createElement('option');
+                        option.value = agent.displayName;
+                        option.text = agent.displayName;
+                        // Set the selected attribute if it matches the user's favorite agent
+                        if (agent.displayName === "<?php echo $user['favorite']; ?>") {
+                            option.selected = true;
                         }
-                    });
+                        favoriteAgentSelect.add(option);
+                    }
                 });
-        });
+            });
+    });
     </script>
 
 </body>
