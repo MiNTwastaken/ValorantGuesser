@@ -54,79 +54,53 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Minigame</title>
-    <link rel="stylesheet" href="styless.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
-            background-color: #1a1a1a;
-            color: white;
-        }
-
         .quiz-container {
             background-color: #282828;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 2rem;
+            border-radius: 0.625rem;
             text-align: center;
-            max-width: 600px;
+            max-width: 37.5rem;
             width: 100%;
+            margin: 2rem auto;
+            color: #ffffff; /* Changed text color to white for better contrast */
         }
 
         .quiz-message {
-            margin-bottom: 20px;
-            padding: 10px;
+            margin-bottom: 2rem;
+            padding: 1rem;
             background-color: #383838;
-            border-radius: 5px;
+            border-radius: 0.3125rem;
+            color: #ffffff; /* Changed text color to white for better contrast */
         }
 
         .quiz-image img {
             max-width: 100%;
-            max-height: 300px;
+            max-height: 18.75rem;
             height: auto;
-            margin-bottom: 20px;
-            border-radius: 8px;
-        }
-
-        .quiz-options {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
+            margin-bottom: 2rem;
+            border-radius: 0.5rem;
         }
 
         .quiz-options label {
-            margin-bottom: 10px;
-            font-size: 18px;
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+            display: block;
+            color: #ffffff; /* Changed text color to white for better contrast */
         }
 
         .quiz-options input[type="radio"] {
-            margin-right: 5px;
+            margin-right: 0.3125rem;
         }
 
         button[type="submit"] {
-            padding: 10px 20px;
+            padding: 0.625rem 1.25rem;
             background-color: #ff4500;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 0.3125rem;
             cursor: pointer;
-        }
-
-        .navbar {
-            background-color: red;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center; 
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 9999;
         }
     </style>
     <script>
@@ -141,33 +115,36 @@ $conn->close();
     </script>
 </head>
 <body>
-    <div class="quiz-container">
-        <?php if (!empty($message)): ?>
-            <div class="quiz-message">
-                <?php echo $message; ?>
-            </div>
-        <?php endif; ?>
-        
-        <?php if (!empty($quiz_data)): ?>
-            <div class="quiz-image">
-                <img src="<?php echo $quiz_data['image_path']; ?>" alt="Quiz Image">
-            </div>
-            <h3><?php echo $quiz_data['question']; ?></h3>
-            <form method="post" onsubmit="return validateForm()">
-                <div class="quiz-options">
-                    <?php
-                    $answers = explode(',', $quiz_data['answers']);
-                    foreach($answers as $key => $answer) {
-                        echo '<label><input type="radio" name="answer" value="'.$key.'">'.$answer.'</label>';
-                    }
-                    ?>
-                </div>
-                <button type="submit">Submit</button>
-            </form>
-        <?php else: ?>
-            <p><?php echo $message; ?></p>
-        <?php endif; ?>
-    </div>
     <?php include 'navbar.php'; ?>
+    <div class="container">
+        <div class="quiz-container">
+            <?php if (!empty($message)): ?>
+                <div class="quiz-message">
+                    <?php echo $message; ?>
+                </div>
+            <?php endif; ?>
+            
+            <?php if (!empty($quiz_data)): ?>
+                <div class="quiz-image">
+                    <img src="<?php echo $quiz_data['image_path']; ?>" alt="Quiz Image">
+                </div>
+                <h3><?php echo $quiz_data['question']; ?></h3>
+                <form method="post" onsubmit="return validateForm()">
+                    <div class="quiz-options">
+                        <?php
+                        $answers = explode(',', $quiz_data['answers']);
+                        foreach($answers as $key => $answer) {
+                            echo '<label><input type="radio" name="answer" value="'.$key.'">'.$answer.'</label>';
+                        }
+                        ?>
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            <?php else: ?>
+                <p><?php echo $message; ?></p>
+            <?php endif; ?>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

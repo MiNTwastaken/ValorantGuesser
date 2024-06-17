@@ -1,5 +1,6 @@
 <?php
 session_start();
+ob_start(); // Start output buffering
 
 // Check if user is logged in and is an admin
 if (!isset($_SESSION["username"]) || (isset($_SESSION["admin"]) && $_SESSION["admin"] != 1)) {
@@ -138,70 +139,83 @@ function addRandomDailyChallenge() {
     // Close the prepared statement
     mysqli_stmt_close($stmt);
 }
-
-
-
-
-
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gamedata Management Panel</title>
-    <link rel="stylesheet" href="styless.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+        }
+        .btn-custom {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+        .seethrough{
+            background-color: rgba(248, 249, 250, 0.9);
+        }
+    </style>
 </head>
 <body>
     <?php include 'navbar.php'; ?>
-    <div class="admin-panel">
-        <h2>Gamedata Management Panel</h2>
-        <form method="post" action=""> <button type="submit" name="update_data" class="show-data-btn">Update Game Data</button>
-        </form>
+    <div class="container">
+        <div class="card shadow-sm p-4 mt-sm-5 seethrough">
+            <h2 class="mb-4">Gamedata Management Panel</h2>
+            <form method="post" action="">
+                <button type="submit" name="update_data" class="btn btn-primary btn-custom">Update Game Data</button>
+            </form>
+            <form method="post" action="">
+                <button type="submit" name="add_daily_challenge" class="btn btn-secondary btn-custom">Add Random Daily Challenge</button>
+            </form>
+            <div id="update-status">
+                <?php
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                    if (isset($_POST['update_data'])) {
+                        updateGameData(1, 'agents'); 
+                        updateGameData(2, 'weapons');
+                        updateGameData(3, 'sprays'); 
+                        updateGameData(4, 'playercards'); 
+                        updateGameData(5, 'buddies'); 
+                        updateGameData(6, 'weapons/skins'); 
 
-        <form method="post" action="">
-            <button type="submit" name="add_daily_challenge" class="show-data-btn">Add Random Daily Challenge</button>
-        </form>
+                        // Redirect after successful update
+                        header("Location: gamedata.php?success=1"); // Redirect with success message
+                        exit;
+                    } 
+                    if (isset($_POST['add_daily_challenge'])) { 
+                        addRandomDailyChallenge();
+                        echo "<div class='alert alert-success'>Daily challenges added successfully!</div>";
+                        header("Refresh: 2; url=gamedata.php"); // Refresh after 3 seconds
+                        exit; // Stop further execution
+                    }
+                }
 
-        <div id="update-status"></div> 
-
-        <?php
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-            
-            if (isset($_POST['update_data'])) {
-                updateGameData(1, 'agents'); 
-                updateGameData(2, 'weapons');
-                updateGameData(3, 'sprays'); 
-                updateGameData(4, 'playercards'); 
-                updateGameData(5, 'buddies'); 
-                updateGameData(6, 'weapons/skins'); 
-
-                // Redirect after successful update
-                header("Location: gamedata.php?success=1"); // Redirect with success message
-                exit;
-            } 
-
-            // Add daily challenge if "add_daily_challenge" button is clicked
-            if (isset($_POST['add_daily_challenge'])) { 
-                addRandomDailyChallenge();
-                echo "<p>Daily challenges added successfully!</p>";
-                header("Refresh: 2; url=gamedata.php"); // Refresh after 3 seconds
-                exit; // Stop further execution
-            }
-        }
-
-        // Display success message if redirected from update
-        if (isset($_GET['success']) && $_GET['success'] == 1) {
-            echo "<p>Game data updated successfully!</p>";
-        }
-        ?>
-        <script>
-            if (window.location.href.indexOf('success=1') > -1) {
-            setTimeout(function() {
-                window.location.href = "gamedata.php"; // Redirect to admin.php
-            }, 2000);
-            }
-        </script>
+                // Display success message if redirected from update
+                if (isset($_GET['success']) && $_GET['success'] == 1) {
+                    echo "<div class='alert alert-success'>Game data updated successfully!</div>";
+                }
+                ?>
+            </div>
+        </div>
     </div>
+    <script>
+        if (window.location.href.indexOf('success=1') > -1) {
+            setTimeout(function() {
+                window.location.href = "gamedata.php"; // Redirect to gamedata.php
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
 
+<?php
+ob_end_flush(); // End output buffering and flush the buffer
+?>

@@ -158,10 +158,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valorant Fanpage - Freeplay Mode</title>
-    <link rel="stylesheet" href="styless.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         .correct {
             color: green;
@@ -170,11 +174,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .incorrect {
             color: red;
         }
+
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             font-family: Arial, sans-serif;
             background-color: #1a1a1a;
             color: white;
@@ -182,45 +183,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         .game-container {
             background-color: #282828;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 2rem;
+            border-radius: 0.625rem;
             text-align: center;
+            width: 100%;
+            max-width: 600px;
+            margin: 2rem auto;
         }
 
         .challenge-image img {
             max-width: 100%;
             height: auto;
-            margin-bottom: 20px;
+            margin-bottom: 1.25rem;
         }
 
         #guess-input {
-            width: calc(100% - 100px);
-            padding: 10px;
-            margin-right: 10px;
+            padding: 0.625rem;
+            margin-right: 0.625rem;
             border: 1px solid #555;
-            border-radius: 5px;
+            border-radius: 0.3125rem;
             background-color: #383838;
             color: white;
         }
 
-        button[type="submit"] {
-            padding: 10px 20px;
-            background-color: #ff4500;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
         #search-results {
-            margin-top: 10px;
+            margin-top: 0.625rem;
             text-align: left;
-            max-height: 200px;
+            max-height: 12.5rem;
             overflow-y: auto;
         }
 
         .search-result {
-            padding: 8px;
+            padding: 0.5rem;
             border-bottom: 1px solid #555;
             cursor: pointer;
             transition: background-color 0.2s;
@@ -229,95 +223,95 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .search-result:hover {
             background-color: #484848;
         }
-        .navbar {
-            background-color: red;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center; 
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 9999;
-        }
+
         .exp-bar {
-            position: fixed;
-            bottom: 20px;
-            right: 10px;
-            background-color: #333; 
-            padding: 8px;
-            min-height: 30px;
+            background-color: #333;
+            padding: 0.625rem;
+            min-height: 2.5rem;
             text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
         }
 
-        .exp-bar div { /* Progress bar styling */
-            background-color: #007bff; 
-            height: 10px;
-            margin-bottom: 5px;
+        .exp-bar div {
+            background-color: #007bff;
+            height: 0.625rem;
+            margin-bottom: 0.3125rem;
         }
 
         .exp-bar span {
             color: white;
             display: block;
         }
+
         #level-up-message {
-            margin-top: 10px;
+            margin-top: 0.625rem;
             text-align: center;
             color: #ff4500;
         }
-        .category-form {
-            text-align: center;
-            margin-bottom: 20px;
-        }
 
-        /* Style the dropdown itself */
         .category-form select {
             background-color: #383838;
             color: white;
-            padding: 10px 20px;
+            padding: 0.625rem 1.25rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 0.3125rem;
+            cursor: pointer;
+        }
+
+        button[type="submit"] {
+            padding: 0.625rem 1.25rem;
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            border-radius: 0.3125rem;
             cursor: pointer;
         }
     </style>
 </head>
 
 <body>
-    <div class="game-container">        
-        <?php // Move the message display outside the form 
-        if (isset($message)) echo $message; ?>
-        <form method="post" action="">
-            <div class="category-form">
-                <select name="category" onchange="this.form.submit()"> 
-                    <option value="1" <?php if ($chosenCategory == 1) echo 'selected'; ?>>Agents</option>
-                    <option value="2" <?php if ($chosenCategory == 2) echo 'selected'; ?>>Weapons</option>
-                    <option value="3" <?php if ($chosenCategory == 3) echo 'selected'; ?>>Sprays</option>
-                    <option value="4" <?php if ($chosenCategory == 4) echo 'selected'; ?>>Player Cards</option>
-                    <option value="5" <?php if ($chosenCategory == 5) echo 'selected'; ?>>Buddies</option>
-                    <option value="6" <?php if ($chosenCategory == 6) echo 'selected'; ?>>Skins</option>
-                </select>
-            </div>
-        </form>
+    <?php include 'navbar.php'; ?>
+    <div class="container">
+        <div class="game-container mt-sm-5">
+            <?php if (isset($message)) echo $message; ?>
+            <form method="post" action="">
+                <div class="category-form mb-3">
+                    <select name="category" class="form-select" onchange="this.form.submit()">
+                        <option value="1" <?php if ($chosenCategory == 1) echo 'selected'; ?>>Agents</option>
+                        <option value="2" <?php if ($chosenCategory == 2) echo 'selected'; ?>>Weapons</option>
+                        <option value="3" <?php if ($chosenCategory == 3) echo 'selected'; ?>>Sprays</option>
+                        <option value="4" <?php if ($chosenCategory == 4) echo 'selected'; ?>>Player Cards</option>
+                        <option value="5" <?php if ($chosenCategory == 5) echo 'selected'; ?>>Buddies</option>
+                        <option value="6" <?php if ($chosenCategory == 6) echo 'selected'; ?>>Skins</option>
+                    </select>
+                </div>
+            </form>
+            <form method="post" action="">
+                <div class="challenge-image">
+                    <img src="<?php echo $currentChallenge['img']; ?>" alt="Challenge Image">
+                </div>
 
-        <form method="post" action=""> 
-            <div class="challenge-image">
-                <img src="<?php echo $currentChallenge['img']; ?>" alt="Challenge Image">
-            </div>
+                <input type="hidden" name="currentCategory" value="<?php echo $chosenCategory; ?>">
+                <div class="input-group mb-3">
+                    <input type="text" name="guess" id="guess-input" class="form-control" placeholder="Type your guess...">
+                </div>
+                <button type="submit" class="btn btn-danger">Submit Guess</button>
+                <div id="search-results" class="list-group"></div>
+            </form>
+        </div>
+    </div>
 
-            <input type="hidden" name="currentCategory" value="<?php echo $chosenCategory; ?>"> <div class="input-container">
-                <input type="text" name="guess" id="guess-input" placeholder="Type your guess...">
-                <button type="submit">Submit Guess</button>
-            </div>
-
-            <div id="search-results"></div>
-        </form>
+    <div class="exp-bar">
+        <span>Level: <?php echo $user['level_name']; ?> EXP: <?php echo $user['exp']; ?> / <?php echo $user['next_level_exp']; ?></span>
+        <div style="width: <?php echo ($user['exp'] / $user['next_level_exp']) * 100; ?>%;"></div>
+    </div>
 
     <script>
         const guessInput = document.getElementById('guess-input');
         const searchResults = document.getElementById('search-results');
-        let selectedResult = null; // Store the selected result for later clearing
 
         guessInput.addEventListener('input', () => {
             const searchTerm = guessInput.value.toLowerCase();
@@ -327,42 +321,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 fetch(`freeplay.php?searchTerm=${searchTerm}&currentCategory=${currentCategory}`)
                     .then(response => response.json())
                     .then(filteredData => {
-                        searchResults.innerHTML = ''; // Clear previous results before showing new ones
+                        searchResults.innerHTML = '';
 
                         filteredData.forEach(item => {
                             const resultDiv = document.createElement('div');
-                            resultDiv.classList.add('search-result');
+                            resultDiv.classList.add('list-group-item', 'search-result');
                             resultDiv.textContent = item.name;
-                            resultDiv.dataset.name = item.name; // Store the full name for submission
+                            resultDiv.dataset.name = item.name;
 
                             resultDiv.addEventListener('click', () => {
-                                const guessForm = document.querySelectorAll('form')[1]; // Select the second form 
-
-                                // If the form exists
-                                if (guessForm) {
-                                    const guessInput = guessForm.querySelector('input[name="guess"]');
-
-                                    // Set the guess input value and submit the form
-                                    guessInput.value = item.name;
-                                    guessForm.submit(); 
-                                } else {
-                                    console.error("Error: Form not found.");
-                                }
+                                guessInput.value = item.name;
+                                searchResults.innerHTML = '';
                             });
 
                             searchResults.appendChild(resultDiv);
                         });
                     });
             } else {
-                searchResults.innerHTML = ''; // Clear results if the input is empty
+                searchResults.innerHTML = '';
             }
         });
     </script>
-
-    <?php include 'navbar.php'; ?>
-    <div class="exp-bar">
-        <span>Level: <?php echo $user['level_name']; ?> EXP: <?php echo $user['exp']; ?> / <?php echo $user['next_level_exp']; ?></span>
-        <div style="width: <?php echo ($user['exp'] / $user['next_level_exp']) * 100; ?>%"></div>
-    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

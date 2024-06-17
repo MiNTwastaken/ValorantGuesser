@@ -1,3 +1,9 @@
+<?php
+session_start();
+ob_start(); // Start output buffering
+?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +15,6 @@
     <?php include 'navbar.php'; ?>
     <div class="content">
         <h2>Confirm Registration</h2>
-    
         <?php
         // Database Connection
         $connection = mysqli_connect("localhost:3306", "root", "", "valorantfanpage");
@@ -46,3 +51,6 @@
     </div>
 </body>
 </html>
+<?php
+ob_end_flush(); // End output buffering and flush the buffer
+?>

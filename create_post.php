@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $createdBy = $_SESSION["username"];
     $tags_id = (int)$_POST["tags_id"];
 
-    // Input Validation (Example)
+    // Input Validation
     if (empty($title) || empty($content)) {
         echo "Title and content are required fields.";
         exit;
@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($error === UPLOAD_ERR_OK) {
                 $fileExtension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
                 if (in_array($fileExtension, $allowedTypes) && $_FILES["media"]["size"][$key] <= $maxFileSize) {
-                    $newFileName = bin2hex(random_bytes(8)) . '.' . $fileExtension; // Add a dot before the extension
+                    $newFileName = bin2hex(random_bytes(8)) . '.' . $fileExtension;
                     $targetFile = $uploadDir . $newFileName;
 
                     if (move_uploaded_file($tmpName, $targetFile)) {

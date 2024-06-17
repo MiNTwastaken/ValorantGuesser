@@ -100,82 +100,127 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 <html>
 <head>
     <title>Profile</title>
-    <link rel="stylesheet" href="styless.css">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
         .profile-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 50px;
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
         }
         .profile-info {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+            text-align: center;
         }
         .profile-picture {
-            margin-right: 20px;
+            margin-bottom: 1rem;
+        }
+        .profile-picture img {
+            width: 10rem;
+            height: 10rem;
+            border-radius: 50%;
+            object-fit: cover;
+            border:0.3rem solid #FF4654;
         }
         .user-details ul {
             list-style-type: none;
             padding: 0;
+            margin: 0;
+        }
+        .user-details li {
+            margin-bottom: 0.5rem;
         }
         .exp-bar {
             background-color: #ddd;
-            border-radius: 5px;
+            border-radius: 0.5rem;
             overflow: hidden;
             width: 100%;
-            margin: 10px 0;
+            height: 1rem;
+            margin: 1rem 0;
         }
         .exp-bar div {
             background-color: #4caf50;
-            height: 10px;
+            height: 100%;
+        }
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input[type="email"], input[type="file"], input[type="password"], select {
+            padding: 0.5rem;
+            width: 100%;
+            max-width: 20rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+        }
+        input[type="checkbox"] {
+            margin-left: 0.5rem;
         }
     </style>
     <script>
-    function togglePasswordVisibility() {
-        var passwordField = document.getElementById("password");
-        if (passwordField.type === "password") {
-            passwordField.type = "text";
-        } else {
-            passwordField.type = "password";
+        function togglePasswordVisibility() {
+            var passwordField = document.getElementById("password");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
         }
-    }
     </script>
 </head>
 <body>
     <?php include 'navbar.php'; ?>
-    <div class="content profile-container">  
+    <div class="profile-container mt-sm-5 p-5">
         <h2>Profile</h2>
         <form action="" method="post" enctype="multipart/form-data">
             <input type="hidden" name="edit_mode" value="<?php echo $editing ? 'true' : 'false'; ?>">
             <div class="profile-info">
                 <div class="profile-picture">
-                    <img src="<?php echo $user['picture']; ?>" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;">
+                    <img src="<?php echo $user['picture']; ?>" alt="Profile Picture">
                     <?php if ($editing): ?>
                         <input type="file" name="picture" id="picture">
                     <?php endif; ?>
                 </div>
                 <div class="user-details">
                     <ul>
-                        <li>Username: <?php echo htmlspecialchars($user['username']); ?></li> 
-                        <li>Email: 
+                        <li>Username: <?php echo htmlspecialchars($user['username']); ?></li>
+                        <li>Email:
                             <?php if ($editing): ?>
                                 <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>">
-                            <?php else: echo htmlspecialchars($user['email']); endif; ?></li>
-                        <li>Favorite Agent: 
+                            <?php else: echo htmlspecialchars($user['email']); endif; ?>
+                        </li>
+                        <li>Favorite Agent:
                             <?php if ($editing): ?>
-                                <select name="favorite" id="favoriteAgent"></select> 
-                            <?php else: echo htmlspecialchars($user['favorite']); endif; ?></li>
-                        <li>Level: <?php echo htmlspecialchars($user['level_name']); ?></li> 
+                                <select name="favorite" id="favoriteAgent"></select>
+                            <?php else: echo htmlspecialchars($user['favorite']); endif; ?>
+                        </li>
+                        <li>Level: <?php echo htmlspecialchars($user['level_name']); ?></li>
                         <li>EXP: <?php echo $user['exp']; ?> / <?php echo $user['next_level_exp']; ?> (Next Level)</li>
                         <div class="exp-bar">
                             <div style="width: <?php echo ($user['exp'] / $user['next_level_exp']) * 100; ?>%;"></div>
                         </div>
                         <li>Joined at: <?php echo $joinedAtFormatted; ?></li>
                         <?php if ($editing): ?>
-                            <li>Password: 
+                            <li>Password:
                                 <input type="password" name="password" id="password">
                                 <input type="checkbox" onclick="togglePasswordVisibility()"> Show Password
                             </li>
@@ -183,10 +228,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                     </ul>
                 </div>
             </div>
-            <?php if (!$editing): ?> 
-                <button type="submit" name="edit_mode" value="true" class="show-data-btn">Edit</button>
-            <?php else: ?> 
-                <button type="submit" name="submit" class="show-data-btn">Update Profile</button> 
+            <?php if (!$editing): ?>
+                <button type="submit" name="edit_mode" value="true">Edit</button>
+            <?php else: ?>
+                <button type="submit" name="submit">Update Profile</button>
             <?php endif; ?>
         </form>
     </div>
@@ -214,6 +259,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             });
     });
     </script>
-
 </body>
 </html>

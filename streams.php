@@ -3,50 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valorant Live Stream</title>
-    <link rel="stylesheet" href="styless.css"> <!-- Link to your styles.css file -->
+    <title>Valorant Live Streams</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        /* Style the iframe container */
-        .stream-container {
-            max-width: 800px;
-            margin: 20px auto; /* Added margin */
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
+        /* Basic styling for the page */
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
         }
 
-        /* Style the iframe */
+        .stream-container {
+            margin-bottom: 1.25rem;
+            border-radius: 0.625rem;
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .stream-container:hover {
+            transform: translateY(-0.1875rem);
+        }
+
+        .stream-name {
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 0.625rem;
+            color: #ff6666;
+        }
+
         .stream-iframe {
             width: 100%;
-            height: 450px;
-            border: none;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            height: 21.875rem;
+            border-radius: 0 0 0.625rem 0.625rem;
         }
 
-        /* Style the stream name */
-        .stream-name {
-            font-weight: bold;
-            margin-bottom: 10px;
+        .seethrough {
+            background-color: rgba(248, 249, 250, 0.9);
         }
     </style>
 </head>
 <body>
     <?php include 'navbar.php'; ?>
-    <?php
-        // Array of stream names
-        $streams = array("VALORANT", "VALORANT_BR", "VALORANT_EMEA", "VALORANT_jpn", "valorant_americas", "valorant_pacific", "VALORANT_NorthAmerica", "valorantesports_ar", "LVPes2");
 
-        // Loop through the stream names and create stream containers
-        foreach ($streams as $stream) {
-            echo '<div class="stream-container">';
-            echo '<p class="stream-name">' . $stream . '</p>'; // Echo stream name
-            echo '<iframe class="stream-iframe" src="https://player.twitch.tv/?channel=' . $stream . '&parent=localhost" allowfullscreen></iframe>';
-            echo '</div>';
-        }
-    ?>
+    <div class="container mt-sm-4 rounded-lg seethrough">
+        <h1 class="text-center mb-4">Valorant Live Streams</h1>
 
+        <div class="row">
+            <?php
+                $streams = array("VALORANT", "VALORANT_BR", "VALORANT_EMEA", "VALORANT_jpn", "valorant_americas", "valorant_pacific", "VALORANT_NorthAmerica", "valorantesports_ar", "LVPes2");
+    
+                foreach ($streams as $stream) {
+                    echo '<div class="col-md-6 col-lg-4">';
+                    echo '<div class="stream-container">';
+                    echo '<div class="stream-name">' . $stream . '</div>';
+                    echo '<iframe class="stream-iframe" src="https://player.twitch.tv/?channel=' . $stream . '&parent=localhost" allowfullscreen></iframe>';
+                    echo '</div>';
+                    echo '</div>';
+                }
+            ?>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
 </body>
 </html>

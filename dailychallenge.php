@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+ob_start(); // Start output buffering
 // Check if user is logged in
 if (!isset($_SESSION["username"])) {
     header("Location: login.php"); // Redirect to login page if not authorized
@@ -78,7 +78,6 @@ if (isset($_GET['searchTerm']) && isset($_GET['currentCategory'])) {
     <link rel="stylesheet" href="styless.css">
     <style>
         body {
-            display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -153,6 +152,7 @@ if (isset($_GET['searchTerm']) && isset($_GET['currentCategory'])) {
     </style>
 </head>
 <body>
+    <?php include 'navbar.php'; ?>
     <div class="game-container">
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -248,6 +248,9 @@ if (isset($_GET['searchTerm']) && isset($_GET['currentCategory'])) {
         });
 
     </script>
-    <?php include 'navbar.php'; ?>
 </body>
 </html>
+
+<?php
+ob_end_flush(); // End output buffering and flush the buffer
+?>

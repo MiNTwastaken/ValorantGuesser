@@ -26,37 +26,33 @@ $posts = getAllPosts($connection);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valorant Social</title>
-    <link rel="stylesheet" href="styless.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .drop-area {
-            border: 2px dashed #ccc;
-            border-radius: 5px;
-            padding: 20px; 
-            text-align: center;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .drop-text {
-            display: block;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-        }
-
-        .highlight {
-            border-color: #007bff; 
-        }
-
         .file-preview {
-            max-width: 150px; 
-            max-height: 150px;
+            max-width: 100%;
+            height: 150px;
+            object-fit: contain;
+        }
+
+        .media-item {
+            position: relative;
             margin: 5px;
+        }
+
+        .media-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #f00;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
         }
 
         .media-controls {
@@ -66,32 +62,22 @@ $posts = getAllPosts($connection);
         }
 
         #media {
-            display: none; 
+            display: none;
         }
 
-        .media-item {
-            position: relative;
-        }
-
-        .media-item .remove-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background-color: #f00;
-            color: #fff; 
-            border: none;
-            padding: 5px 10px;
+        #uploadLabel {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 4px;
             cursor: pointer;
         }
-        .file-preview {
-            max-width: 100%;
-            height: 150px; 
-            object-fit: contain;
-        }
+
         #tags {
             padding: 8px;
             border: 1px solid #ccc;
-            border-radius: 4px; 
+            border-radius: 4px;
             font-size: 1rem;
             width: 100%;
             background-color: #fff;
@@ -100,63 +86,63 @@ $posts = getAllPosts($connection);
             -webkit-appearance: none;
         }
 
-        #tags option { /* Style the options inside the dropdown */
+        #tags option {
             padding: 5px;
             background-color: #fff;
             color: #333;
         }
 
-        #tags:focus { 
-            outline: none; 
+        #tags:focus {
+            outline: none;
             border-color: #007bff;
         }
 
-        #tags::-ms-expand { 
+        #tags::-ms-expand {
             display: none;
         }
 
-        #tags::after { 
-            content: '▼'; 
+        #tags::after {
+            content: '▼';
             position: absolute;
             top: 50%;
             right: 10px;
             transform: translateY(-50%);
-            pointer-events: none; 
+            pointer-events: none;
+        }
+
+        .seethrough {
+            background-color: rgba(248, 249, 250, 0.9);
         }
     </style>
 </head>
 <body>
-    <script src="script.js"></script>
     <?php include 'navbar.php'; ?>
-    <div class="content">
+    <div class="container mt-sm-5 p-5 rounded-lg seethrough">
         <?php if (isset($_SESSION["username"])): ?>
             <div class="create-post-container">
                 <h2>Create a New Post</h2>
                 <form action="create_post.php" method="post" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="title">Post Title:</label>
-                        <input type="text" name="title" id="title" required>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Post Title:</label>
+                        <input type="text" name="title" id="title" class="form-control" required>
                     </div>
 
-                    <div class="form-group">
-                        <label for="content">Content:</label>
-                        <textarea name="content" id="content" required></textarea>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Content:</label>
+                        <textarea name="content" id="content" class="form-control" required></textarea>
                     </div>
 
-                    <div class="form-group">
-                        <label for="media">Media (Max 3 files):</label>
-                        <div class="drop-area" id="dropArea">
-                            <input type="file" name="media[]" id="media" multiple accept="image/*,video/*" />
-                            <span class="drop-text">Drag & drop files here or click to browse</span>
-                        </div>
-                        <div id="filePreviews"></div>
+                    <div class="mb-3">
+                        <label for="media" class="form-label">Media (Max 3 files):</label>
+                        <label id="uploadLabel" for="media">Choose files</label>
+                        <input type="file" name="media[]" id="media" multiple accept="image/*,video/*" />
+                        <div id="filePreviews" class="mt-3"></div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="tags_id">Tag:</label>
-                        <select name="tags_id" id="tags">
+                    <div class="mb-3">
+                        <label for="tags_id" class="form-label">Tag:</label>
+                        <select name="tags_id" id="tags" class="form-select">
                             <?php
-                            // Fetch tags from the database
                             $tagsQuery = "SELECT * FROM tags";
                             $tagsResult = mysqli_query($connection, $tagsQuery);
 
@@ -166,46 +152,47 @@ $posts = getAllPosts($connection);
                             ?>
                         </select>
                     </div>
-                    <button type="submit" class="create-post-btn">Create Post</button>
+                    <button type="submit" class="btn btn-primary">Create Post</button>
                 </form>
             </div>
         <?php else : ?>
-            <div class="login-prompt">
-                <p>To create posts, please <a href="login.php">log in</a> or <a href="register.php">register</a>.</p>
+            <div class="alert alert-warning" role="alert">
+                To create posts, please <a href="login.php" class="alert-link">log in</a> or <a href="register.php" class="alert-link">register</a>.
             </div>
         <?php endif; ?>
 
-        <h2>Current posts</h2>
+        <h2 class="mt-5">Current posts</h2>
         <?php if ($posts) : ?>
             <div class="post-list">
                 <?php foreach ($posts as $post): ?>
-                    <div class="post-box" data-post-id="<?php echo $post['id']; ?>">
-                        <h3 class="post-title"><?php echo htmlspecialchars_decode($post['title']); ?></h3>
-                        <p class="post-meta">Created by: <span class="post-author"><?php echo $post['created_by']; ?></span> on <span class="post-date"><?php echo $post['created_at']; ?></span> - <span class="post-tags"><?php echo $post['tag_name'] ?? 'No tag'; ?></span> </p> 
-                        <p class="post-content"><?php echo htmlspecialchars_decode($post['content']); ?></p>
-                        <div class="post-media" data-current-media-index="0"> <?php 
-                            $mediaFiles = explode(',', $post['media']);
-                            foreach($mediaFiles as $index => $mediaFile) : 
-                                $filePath = "content/" . $mediaFile;
-                                $fileType = mime_content_type($filePath);
-                                $display = ($index === 0) ? 'block' : 'none'; // Display the first media item by default
-                                ?>
-                                <div class="media-item" style="display: <?= $display ?>;">
-                                    <?php if (strpos($fileType, 'image/') === 0) : ?>
-                                        <img src="<?= $filePath ?>" alt="Post Media" class="file-preview">
-                                    <?php elseif (strpos($fileType, 'video/') === 0) : ?>
-                                        <video src="<?= $filePath ?>" controls class="file-preview"></video>
-                                    <?php else : ?>
-
-                                    <?php endif; ?>
+                    <div class="card mb-3 post-box" data-post-id="<?php echo $post['id']; ?>">
+                        <div class="card-body">
+                            <h3 class="card-title"><?php echo htmlspecialchars_decode($post['title']); ?></h3>
+                            <p class="card-text">Created by: <span class="post-author"><?php echo $post['created_by']; ?></span> on <span class="post-date"><?php echo $post['created_at']; ?></span> - <span class="post-tags"><?php echo $post['tag_name'] ?? 'No tag'; ?></span></p>
+                            <p class="card-text"><?php echo htmlspecialchars_decode($post['content']); ?></p>
+                            <div class="post-media" data-current-media-index="0">
+                                <?php 
+                                $mediaFiles = explode(',', $post['media']);
+                                foreach($mediaFiles as $index => $mediaFile) : 
+                                    $filePath = "content/" . $mediaFile;
+                                    $fileType = mime_content_type($filePath);
+                                    $display = ($index === 0) ? 'block' : 'none'; // Display the first media item by default
+                                    ?>
+                                    <div class="media-item" style="display: <?= $display ?>;">
+                                        <?php if (strpos($fileType, 'image/') === 0) : ?>
+                                            <img src="<?= $filePath ?>" alt="Post Media" class="file-preview">
+                                        <?php elseif (strpos($fileType, 'video/') === 0) : ?>
+                                            <video src="<?= $filePath ?>" controls class="file-preview"></video>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endforeach; ?>
+                                <div class="media-controls" style="display: <?php echo (count($mediaFiles) > 1) ? 'flex' : 'none'; ?>;">
+                                    <button class="btn btn-outline-primary me-2" onclick="showPrevMedia(<?php echo $post['id']; ?>)">&lt;</button>
+                                    <button class="btn btn-outline-primary" onclick="showNextMedia(<?php echo $post['id']; ?>)">&gt;</button>
                                 </div>
-                            <?php endforeach; ?>
-                            <div class="media-controls" style="display: <?php echo (count($mediaFiles) > 1) ? 'flex' : 'none'; ?>;">
-                                <button class="media-prev" onclick="showPrevMedia(<?php echo $post['id']; ?>)">&lt;</button>
-                                <button class="media-next" onclick="showNextMedia(<?php echo $post['id']; ?>)">&gt;</button>
                             </div>
+                            <a href="view_post.php?id=<?php echo $post['id']; ?>" class="btn btn-link mt-3">Read Comments</a>
                         </div>
-                        <a href="view_post.php?id=<?php echo $post['id']; ?>" class="read-more">Read Comments</a>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -214,99 +201,89 @@ $posts = getAllPosts($connection);
         <?php endif; ?>
     </div>
     <script>
-        const dropArea = document.getElementById('dropArea');
-        const fileInput = document.getElementById('media');
-        const previewsContainer = document.getElementById('filePreviews');
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('media');
+            const previewsContainer = document.getElementById('filePreviews');
 
-        // Drag and Drop Event Listeners
-        dropArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropArea.classList.add('highlight');
-        });
+            fileInput.addEventListener('change', () => {
+                handleFiles(fileInput.files);
+            });
 
-        dropArea.addEventListener('dragleave', () => {
-            dropArea.classList.remove('highlight');
-        });
+            // Handle Files Function
+            function handleFiles(files) {
+                previewsContainer.innerHTML = ''; // Clear existing previews
+                for (let i = 0; i < Math.min(files.length, 3); i++) {
+                    const file = files[i];
 
-        dropArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropArea.classList.remove('highlight');
-            const files = e.dataTransfer.files;
-            handleFiles(files);
-        });
+                    const mediaItem = document.createElement('div');
+                    mediaItem.classList.add('media-item');
 
-        // Click to browse for files (only when clicking directly on the drop area)
-        dropArea.addEventListener('click', () => {
-            fileInput.click();
-        });
+                    if (file.type.startsWith('image/')) {
+                        const img = document.createElement('img');
+                        img.classList.add('file-preview');
+                        img.file = file;
+                        mediaItem.appendChild(img);
 
-        fileInput.addEventListener('change', () => {
-            handleFiles(fileInput.files);
-        });
+                        const reader = new FileReader();
+                        reader.onload = (function (aImg) {
+                            return function (e) {
+                                aImg.src = e.target.result;
+                            };
+                        })(img);
+                        reader.readAsDataURL(file);
+                    } else if (file.type.startsWith('video/')) {
+                        const video = document.createElement('video');
+                        video.classList.add('file-preview');
+                        video.controls = true;
+                        video.file = file;
+                        mediaItem.appendChild(video);
 
-        // Handle Files Function
-        function handleFiles(files) {
-            for (let i = 0; i < Math.min(files.length, 3); i++) { 
-                const file = files[i];
+                        const reader = new FileReader();
+                        reader.onload = (function (aVideo) {
+                            return function (e) {
+                                aVideo.src = e.target.result;
+                            };
+                        })(video);
+                        reader.readAsDataURL(file);
+                    }
 
-                const mediaItem = document.createElement('div');
-                mediaItem.classList.add('media-item');
+                    const removeButton = document.createElement('button');
+                    removeButton.classList.add('remove-btn');
+                    removeButton.textContent = 'Remove';
+                    removeButton.onclick = () => {
+                        mediaItem.remove();
+                        fileInput.value = '';
+                    };
 
-                if (file.type.startsWith('image/')) {
-                    const img = document.createElement('img');
-                    img.classList.add('file-preview');
-                    img.file = file; 
-                    mediaItem.appendChild(img);
-
-                    const reader = new FileReader();
-                    reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
-                    reader.readAsDataURL(file);
-                } else if (file.type.startsWith('video/')) {
-                    const video = document.createElement('video');
-                    video.classList.add('file-preview');
-                    video.src = URL.createObjectURL(file);
-                    video.controls = true;
-                    mediaItem.appendChild(video);
-                } else {
-                    console.warn('Unsupported file type:', file.type);
-                    continue; 
+                    mediaItem.appendChild(removeButton);
+                    previewsContainer.appendChild(mediaItem);
                 }
-
-                const removeBtn = document.createElement('button');
-                removeBtn.textContent = 'X';
-                removeBtn.classList.add('remove-btn');
-                removeBtn.onclick = function() {
-                    previewsContainer.removeChild(mediaItem); 
-                };
-                mediaItem.appendChild(removeBtn);
-
-                previewsContainer.appendChild(mediaItem);
             }
-        }
+        });
 
-        // Show Previous Media Function
-        function showPrevMedia(postId) {
-            const postMediaDiv = document.querySelector(`.post-box[data-post-id="${postId}"] .post-media`);
-            let currentMediaIndex = parseInt(postMediaDiv.dataset.currentMediaIndex);
-            const mediaItems = postMediaDiv.querySelectorAll('.media-item'); 
-
-            mediaItems[currentMediaIndex].style.display = 'none';
-            currentMediaIndex = (currentMediaIndex - 1 + mediaItems.length) % mediaItems.length;
-            postMediaDiv.dataset.currentMediaIndex = currentMediaIndex; 
-            mediaItems[currentMediaIndex].style.display = 'block';
-        }
-
-        // Show Next Media Function
         function showNextMedia(postId) {
-            const postMediaDiv = document.querySelector(`.post-box[data-post-id="${postId}"] .post-media`);
-            let currentMediaIndex = parseInt(postMediaDiv.dataset.currentMediaIndex);
-            const mediaItems = postMediaDiv.querySelectorAll('.media-item'); 
+            const postBox = document.querySelector(`.post-box[data-post-id="${postId}"]`);
+            const mediaItems = postBox.querySelectorAll('.media-item');
+            const currentIndex = parseInt(postBox.querySelector('.post-media').getAttribute('data-current-media-index'));
 
-            mediaItems[currentMediaIndex].style.display = 'none';
-            currentMediaIndex = (currentMediaIndex + 1) % mediaItems.length;
-            postMediaDiv.dataset.currentMediaIndex = currentMediaIndex; 
-            mediaItems[currentMediaIndex].style.display = 'block';
+            mediaItems[currentIndex].style.display = 'none';
+            const nextIndex = (currentIndex + 1) % mediaItems.length;
+            mediaItems[nextIndex].style.display = 'block';
+            postBox.querySelector('.post-media').setAttribute('data-current-media-index', nextIndex);
+        }
+
+        function showPrevMedia(postId) {
+            const postBox = document.querySelector(`.post-box[data-post-id="${postId}"]`);
+            const mediaItems = postBox.querySelectorAll('.media-item');
+            const currentIndex = parseInt(postBox.querySelector('.post-media').getAttribute('data-current-media-index'));
+
+            mediaItems[currentIndex].style.display = 'none';
+            const prevIndex = (currentIndex - 1 + mediaItems.length) % mediaItems.length;
+            mediaItems[prevIndex].style.display = 'block';
+            postBox.querySelector('.post-media').setAttribute('data-current-media-index', prevIndex);
         }
     </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

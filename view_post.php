@@ -80,62 +80,111 @@ mysqli_close($connection);
 <html>
 <head>
     <title>View Post</title>
-    <link rel="stylesheet" href="styless.css"> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .media-item img, .media-item video {
+            height: 33rem;
+            width: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+        .media-controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .comment-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .container {
+            max-width: 100%;
+            padding: 15px;
+        }
+        .card {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .media-item {
+            display: none;
+        }
+        .media-item:first-child {
+            display: block;
+        }
+        .seethrough {
+            background-color: rgba(248, 249, 250, 0.9);
+        }
+        @media (min-width: 768px) {
+            .container {
+                max-width: 50rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <script src="script.js"></script>
-    <?php include 'navbar.php'; ?>
-    <div class="content">
-        <h2><?php echo $postTitle; ?></h2>
-        <p><?php echo $postContent; ?></p>
-
-        <?php if (!empty($mediaFiles)): ?> 
-            <div class="post-media" data-current-media-index="0">
-            <?php foreach ($mediaFiles as $index => $mediaFile) : ?>
-                <?php
-                    $filePath = "content/" . $mediaFile;
-                    $fileType = mime_content_type($filePath);
-                    $display = ($index === 0) ? 'block' : 'none'; 
-                ?>
-                <div class="media-item" style="display: <?= $display ?>;">
-                    <?php if (strpos($fileType, 'image/') === 0) : ?>
-                        <img src="<?= $filePath ?>" alt="Post Media" class="file-preview">
-                    <?php elseif (strpos($fileType, 'video/') === 0) : ?>
-                        <video src="<?= $filePath ?>" controls class="file-preview"></video>
-                    <?php endif; ?>
-                </div>
-            <?php endforeach; ?>
-                
-                <div class="media-controls" style="display: <?php echo (count($mediaFiles) > 1) ? 'flex' : 'none'; ?>;">
-                    <button class="media-prev" onclick="showPrevMedia(<?php echo $postId; ?>)">&lt;</button>
-                    <button class="media-next" onclick="showNextMedia(<?php echo $postId; ?>)">&gt;</button>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <?php include 'navbar.php'; ?>
+        <div class="container mt-sm-5 p-3 p-sm-5 rounded-lg seethrough">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title"><?php echo $postTitle; ?></h2>
+                    <p class="card-text"><?php echo $postContent; ?></p>
                 </div>
             </div>
-        <?php endif; ?>
 
+            <?php if (!empty($mediaFiles)): ?>
+                <div class="post-media mb-4" data-current-media-index="0">
+                    <?php foreach ($mediaFiles as $index => $mediaFile) : ?>
+                        <?php
+                            $filePath = "content/" . $mediaFile;
+                            $fileType = mime_content_type($filePath);
+                        ?>
+                        <div class="media-item">
+                            <?php if (strpos($fileType, 'image/') === 0) : ?>
+                                <img src="<?= $filePath ?>" alt="Post Media" class="img-fluid rounded">
+                            <?php elseif (strpos($fileType, 'video/') === 0) : ?>
+                                <video src="<?= $filePath ?>" controls class="img-fluid rounded"></video>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
 
-        <h3>Comments</h3>
+                    <?php if (count($mediaFiles) > 1) : ?> <div class="media-controls">
+                        <button class="btn btn-secondary" onclick="showPrevMedia()">&lt;</button>
+                        <button class="btn btn-secondary" onclick="showNextMedia()">&gt;</button>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
 
-        <?php if (isset($_SESSION["username"])): ?>
-            <form action="" method="post">
-                <textarea name="comment_text" placeholder="Write your comment..."></textarea>
-                <button type="submit">Submit Comment</button>
-            </form>
-        <?php else: ?>
-            <p>You need to be logged in to comment.</p>
-        <?php endif; ?>
-        <ul class="comment-list">
-            <?php foreach ($comments as $comment): ?>
-                <li>
-                    <strong><?php echo $comment['commenter']; ?></strong> (<?php echo $comment['created_at']; ?>):
-                    <p><?php echo $comment['comment_text']; ?></p>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
+            <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title">Comments</h3>
+
+                <?php if (isset($_SESSION["username"])): ?>
+                    <form action="" method="post" class="mb-4">
+                        <div class="mb-3">
+                            <textarea name="comment_text" class="form-control" placeholder="Write your comment..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Comment</button>
+                    </form>
+                <?php else: ?>
+                    <p>You need to be logged in to comment.</p>
+                <?php endif; ?>
+
+                <ul class="list-group">
+                    <?php foreach ($comments as $comment): ?>
+                        <li class="list-group-item">
+                            <strong><?php echo $comment['commenter']; ?></strong> (<?php echo $comment['created_at']; ?>):
+                            <p><?php echo $comment['comment_text']; ?></p>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            </div>
+        </div>
     <script>
         // Show Previous Media Function
-        function showPrevMedia(postId) {
+        function showPrevMedia() {
             const postMediaDiv = document.querySelector(`.post-media[data-current-media-index]`); // Select by the data attribute
             let currentMediaIndex = parseInt(postMediaDiv.dataset.currentMediaIndex);
             const mediaItems = postMediaDiv.querySelectorAll('.media-item'); 
@@ -147,7 +196,7 @@ mysqli_close($connection);
         }
 
         // Show Next Media Function
-        function showNextMedia(postId) {
+        function showNextMedia() {
             const postMediaDiv = document.querySelector(`.post-media[data-current-media-index]`); // Select by the data attribute
             let currentMediaIndex = parseInt(postMediaDiv.dataset.currentMediaIndex);
             const mediaItems = postMediaDiv.querySelectorAll('.media-item'); 

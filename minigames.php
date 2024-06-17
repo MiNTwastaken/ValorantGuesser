@@ -146,33 +146,6 @@
     <?php session_start(); ?>
     <?php include 'navbar.php'; ?>
     <div class="content">
-        <h1>Valorant Minigames</h1>
-        <p>Test your Valorant skills and knowledge with these fun minigames!</p>
-
-        <div style="text-align: center;">
-            <a href="leaderboard.php" class="leaderboard-btn">View Leaderboard</a>
-        </div>
-
-        <div class="minigame-grid">
-            <div class="minigame">
-                <h2>Daily Quiz</h2>
-                <p>Guessing game about Valorant to test your knowledge</p>
-                <p>A global one time daily event for all</p>
-                <a href="dailychallenge.php">Play Daily Quiz</a>
-            </div>
-            <div class="minigame">
-                <h2>One Shot</h2>
-                <p>Sharpen your aim and reflexes by shooting targets the fastest</p>
-                <a href="aimtrainer.php">Play One Shot</a>
-            </div>
-            <div class="minigame">
-                <h2>Free Play</h2>
-                <p>Boundless guessing game about Valorant to test your knowledge</p>
-                <p>Choose your category, choose a new prompt, earn your experience</p>
-                <a href="freeplay.php">Play Free Play</a>
-            </div>
-        </div>
-
         <h2>User Created Quizzes</h2>
 
         <?php
@@ -220,6 +193,30 @@
             }
             $conn->close();
             ?>
+        </div>
+        <h1>Minigames offered by us!</h1>
+        <p>Test your Valorant skills and knowledge with these fun minigames!</p>
+        <div class="minigame-grid">
+            <div class="minigame">
+                <h2>Daily Quiz</h2>
+                <p>Guessing game about Valorant to test your knowledge</p>
+                <p>A global one time daily event for all</p>
+                <a href="dailychallenge.php">Play Daily Quiz</a>
+            </div>
+            <div class="minigame">
+                <h2>One Shot</h2>
+                <p>Sharpen your aim and reflexes by shooting targets the fastest</p>
+                <a href="aimtrainer.php">Play One Shot</a>
+            </div>
+            <div class="minigame">
+                <h2>Free Play</h2>
+                <p>Boundless guessing game about Valorant to test your knowledge</p>
+                <p>Choose your category, choose a new prompt, earn your experience</p>
+                <a href="freeplay.php">Play Free Play</a>
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <a href="leaderboard.php" class="leaderboard-btn">View Leaderboard</a>
         </div>
     </div>
 </body>
