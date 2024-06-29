@@ -58,7 +58,6 @@ if (isset($_POST['delete_post']) && isset($_POST['post_id'])) {
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            padding: 2rem;
             background-color: #343a40;
         }
         .seethrough {

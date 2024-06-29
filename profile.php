@@ -37,61 +37,80 @@ $editing = isset($_POST['edit_mode']) && $_POST['edit_mode'] === 'true';
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $editing = false; // Exit edit mode after submitting
 
-    // Handle profile picture upload
-    $newPicture = $user['picture']; // Initialize with existing picture
-    if (!empty($_FILES["picture"]["name"])) {
-        $targetDir = "img/profile/";
-        $targetFile = $targetDir . basename($_FILES["picture"]["name"]);
-        $uploadOk = 1;
-        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-
-        // Check if image file is a actual image or fake image
-        $check = getimagesize($_FILES["picture"]["tmp_name"]);
-        if($check !== false) {
-            $uploadOk = 1;
-        } else {
-            echo "File is not an image.";
-            $uploadOk = 0;
-        }
-
-        if ($uploadOk == 0) {
-            echo "Sorry, your file was not uploaded.";
-        } else {
-            if (move_uploaded_file($_FILES["picture"]["tmp_name"], $targetFile)) {
-                $newPicture = $targetFile; // Update with new picture path
-            } else {
-                echo "Sorry, there was an error uploading your file.";
-            }
-        }
-    }
-    
     // Sanitize form data
+    $newUsername = mysqli_real_escape_string($connection, $_POST["username"]);
     $newFavorite = mysqli_real_escape_string($connection, $_POST["favorite"]);
     $newEmail = mysqli_real_escape_string($connection, $_POST["email"]);
-    $newPassword = $_POST["password"]; // Get the new password
+    $newPassword = $_POST["new_password"]; // Get the new password
+    $currentPassword = $_POST["current_password"]; // Get the current password
 
-    // Check if the new password is provided
-    if (!empty($newPassword)) {
-        // Hash the new password
-        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+    // Verify current password
+    if (password_verify($currentPassword, $user['password'])) {
+        // Handle profile picture upload
+        $newPicture = $user['picture']; // Initialize with existing picture
+        if (!empty($_FILES["picture"]["name"])) {
+            $targetDir = "img/profile/";
+            $targetFile = $targetDir . basename($_FILES["picture"]["name"]);
+            $uploadOk = 1;
+            $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+            // Check if image file is an actual image or fake image
+            $check = getimagesize($_FILES["picture"]["tmp_name"]);
+            if($check !== false) {
+                $uploadOk = 1;
+            } else {
+                echo "File is not an image.";
+                $uploadOk = 0;
+            }
+
+            if ($uploadOk == 0) {
+                echo "Sorry, your file was not uploaded.";
+            } else {
+                if (move_uploaded_file($_FILES["picture"]["tmp_name"], $targetFile)) {
+                    $newPicture = $targetFile; // Update with new picture path
+                } else {
+                    echo "Sorry, there was an error uploading your file.";
+                }
+            }
+        }
+
+        // Check if the new password is provided
+        if (!empty($newPassword)) {
+            // Hash the new password
+            $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+        } else {
+            // Use the existing password if no new password is provided
+            $hashedPassword = $user['password'];
+        }
+
+        // Check if the new username already exists in the database
+        $checkUsernameSql = "SELECT * FROM user WHERE username = ?";
+        $checkStmt = mysqli_prepare($connection, $checkUsernameSql);
+        mysqli_stmt_bind_param($checkStmt, "s", $newUsername);
+        mysqli_stmt_execute($checkStmt);
+        $checkResult = mysqli_stmt_get_result($checkStmt);
+
+        if (mysqli_num_rows($checkResult) > 0 && $newUsername !== $username) {
+            echo "Username already taken. Please choose another one.";
+        } else {
+            // Prepare and execute the SQL update statement
+            $stmt = mysqli_prepare($connection, "UPDATE user SET username = ?, picture = ?, favorite = ?, email = ?, password = ? WHERE username = ?");
+            mysqli_stmt_bind_param($stmt, "ssssss", $newUsername, $newPicture, $newFavorite, $newEmail, $hashedPassword, $username); 
+
+            if (mysqli_stmt_execute($stmt)) {
+                // Update session username and email
+                $_SESSION['username'] = $newUsername;
+                $_SESSION['email'] = $newEmail;
+
+                // After updating, redirect to profile.php
+                header("Location: profile.php");
+                exit(); 
+            } else {
+                echo "Error updating record: " . mysqli_error($connection);
+            }
+        }
     } else {
-        // Use the existing password if no new password is provided
-        $hashedPassword = $user['password'];
-    }
-
-    // Prepare and execute the SQL update statement (without username update)
-    $stmt = mysqli_prepare($connection, "UPDATE user SET picture = ?, favorite = ?, email = ?, password = ? WHERE username = ?");
-    mysqli_stmt_bind_param($stmt, "sssss", $newPicture, $newFavorite, $newEmail, $hashedPassword, $username); 
-
-    if (mysqli_stmt_execute($stmt)) {
-        // Update session email
-        $_SESSION['email'] = $newEmail;
-
-        // After updating, redirect to profile.php
-        header("Location: profile.php");
-        exit(); 
-    } else {
-        echo "Error updating record: " . mysqli_error($connection);
+        echo "Current password is incorrect.";
     }
 }
 ?>
@@ -164,7 +183,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         button:hover {
             background-color: #0056b3;
         }
-        input[type="email"], input[type="file"], input[type="password"], select {
+        input[type="text"], input[type="email"], input[type="file"], input[type="password"], select {
             padding: 0.5rem;
             width: 100%;
             max-width: 20rem;
@@ -202,7 +221,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                 </div>
                 <div class="user-details">
                     <ul>
-                        <li>Username: <?php echo htmlspecialchars($user['username']); ?></li>
+                        <li>Username:
+                            <?php if ($editing): ?>
+                                <input type="text" name="username" value="<?php echo htmlspecialchars($user['username']); ?>">
+                            <?php else: echo htmlspecialchars($user['username']); endif; ?>
+                        </li>
                         <li>Email:
                             <?php if ($editing): ?>
                                 <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>">
@@ -220,9 +243,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                         </div>
                         <li>Joined at: <?php echo $joinedAtFormatted; ?></li>
                         <?php if ($editing): ?>
-                            <li>Password:
-                                <input type="password" name="password" id="password">
+                            <li>New Password:
+                                <input type="password" name="new_password" id="password">
                                 <input type="checkbox" onclick="togglePasswordVisibility()"> Show Password
+                            </li>
+                            <li>Current Password:
+                                <input type="password" name="current_password" required>
                             </li>
                         <?php endif; ?>
                     </ul>

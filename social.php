@@ -37,6 +37,8 @@ $posts = getAllPosts($connection);
             max-width: 100%;
             height: 150px;
             object-fit: contain;
+            display: block; /* Ensures block-level display for media items */
+            margin: auto; /* Centers the media item within its parent */
         }
 
         .media-item {
